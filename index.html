@@ -50,13 +50,13 @@
           <div class="block-head"><h2>Инструмент сцены</h2><span class="small-note" id="sourcesCount">1 источник</span></div>
           <div class="toolbar" role="group" aria-label="Выберите инструмент">
             <button class="tool-btn" type="button" data-tool="source" aria-pressed="true" title="Добавить источник звука"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2.1 2.1m9.8 9.8L19 19M19 5l-2.1 2.1m-9.8 9.8L5 19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span>Звук</span></button>
-            <button class="tool-btn" type="button" data-tool="wall" aria-pressed="false" title="Нарисовать стену перетаскиванием"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4zM4 9h16M4 15h16M9 4v5m6 0v6m-6 0v5m6-16v5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Стена</span></button>
+            <button class="tool-btn" type="button" data-tool="wall" aria-pressed="false" title="Нарисовать стену под любым углом"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4zM4 9h16M4 15h16M9 4v5m6 0v6m-6 0v5m6-16v5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Стена</span></button>
             <button class="tool-btn" type="button" data-tool="object" aria-pressed="false" title="Добавить предмет интерьера или звукопоглотитель"><svg viewBox="0 0 24 24" fill="none"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Объект</span></button>
             <button class="tool-btn" type="button" data-tool="equipment" aria-pressed="false" title="Поставить специальный прибор или акустическое оборудование"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 13h2l1.5-4 2 6 1.5-3H17M9 21h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Приборы</span></button>
             <button class="tool-btn" type="button" data-tool="erase" aria-pressed="false" title="Удалить стену или предмет"><svg viewBox="0 0 24 24" fill="none"><path d="m4 14 8-9a2 2 0 0 1 2.8-.2l4.4 3.8a2 2 0 0 1 .2 2.8L12 20H7l-3-3a2 2 0 0 1 0-3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m9 20 7-8" stroke="currentColor" stroke-width="1.6"/></svg><span>Стереть</span></button>
             <button class="tool-btn" type="button" data-tool="pan" aria-pressed="false" title="Выбрать источник, стену, объект или прибор и открыть его настройки"><svg viewBox="0 0 24 24" fill="none"><path d="M8 11V6a1.5 1.5 0 0 1 3 0v4-6a1.5 1.5 0 0 1 3 0v6-5a1.5 1.5 0 0 1 3 0v7-3a1.5 1.5 0 0 1 3 0v6a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.6-2.8L3 15a1.7 1.7 0 0 1 2.6-2.1L8 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Выбрать</span></button>
           </div>
-          <p class="mat-note" id="toolHint">Щёлкните по полю, чтобы добавить источник. Выберите «Стена» и протяните её поперёк комнаты.</p>
+          <p class="mat-note" id="toolHint">Щёлкните по полю, чтобы добавить источник. Выберите «Стена» и протяните её под любым углом.</p>
           <div class="source-list" id="sourceList" aria-label="Источники звука"></div>
         </section>
         <section class="block context-panel" id="signalPanel">
@@ -72,7 +72,7 @@
           <div class="control"><div class="control-row"><label for="thickness">Толщина слоя</label><span class="value" id="thicknessValue">20 см</span></div><div class="slider-line"><span class="slider-end">5</span><input id="thickness" type="range" min="5" max="80" value="20" step="1" aria-label="Толщина слоя в сантиметрах"><span class="slider-end">80 см</span></div></div>
           <div class="material-data" id="materialInfo">Свойства слоя будут показаны здесь.</div>
           <button class="btn glass-tune" id="glassTune" type="button" hidden>Настроить источник под стекло</button>
-          <p class="mat-note" id="wallModeHint">Протяните стену на карте. Чтобы изменить готовую стену, нажмите «Выбрать» и щёлкните по ней.</p>
+          <p class="mat-note" id="wallModeHint">Протяните стену в любом направлении. Чтобы изменить готовую стену, нажмите «Выбрать» и щёлкните по ней.</p>
           <button class="btn layer-preset" id="layerPreset" type="button">Показать пример: бетон — вата — бетон</button>
         </section>
         <section class="block context-panel" id="objectPanel" hidden>
@@ -227,9 +227,27 @@
   function sourceRange(src) { return src.level <= 0 ? 0 : (70 + 260 * src.level / 100) * (src.device === 'subwoofer' ? 1.25 : 1); }
   function sourceFade(distance, range) { return range > 0 ? Math.pow(clamp((range - distance) / (range * .28), 0, 1), 2) : 0; }
   function glassResonance(thicknessCm) { return Math.round(500 + (thicknessCm - 20) * 3); }
+  function wallThickness(wall) { return wall.thickness ?? Math.min(wall.w, wall.h); }
+  function updateWallBounds(wall) {
+    const radius = wall.thickness / 2;
+    wall.x = Math.min(wall.ax, wall.bx) - radius;
+    wall.y = Math.min(wall.ay, wall.by) - radius;
+    wall.w = Math.abs(wall.bx - wall.ax) + radius * 2;
+    wall.h = Math.abs(wall.by - wall.ay) + radius * 2;
+  }
+  function pointOnWall(wall, t) { return { x: wall.ax + (wall.bx - wall.ax) * t, y: wall.ay + (wall.by - wall.ay) * t }; }
+  function closestOnSegment(px, py, ax, ay, bx, by) {
+    const dx = bx - ax, dy = by - ay, length2 = dx * dx + dy * dy;
+    const t = length2 ? clamp(((px - ax) * dx + (py - ay) * dy) / length2, 0, 1) : 0;
+    return { x: ax + dx * t, y: ay + dy * t, t };
+  }
+  function wallDistance(wall, x, y) {
+    const point = closestOnSegment(x, y, wall.ax, wall.ay, wall.bx, wall.by);
+    return Math.hypot(x - point.x, y - point.y);
+  }
   function prepareWall(wall) {
     if (wall.material === 'glass') {
-      wall.resonance = glassResonance(Math.min(wall.w, wall.h) * 100);
+      wall.resonance = glassResonance(wallThickness(wall) * 100);
       wall.damage = 0;
       wall.broken = false;
       wall.contactPeak = 0;
@@ -329,14 +347,14 @@
     showPanel({ source: 'signal', wall: 'wall', object: 'object', equipment: 'equipment' }[tool] || null);
     const hints = {
       source: 'Щёлкните по полю, чтобы добавить ещё один источник звука.',
-      wall: 'Протяните стену поперёк комнаты. Толщину задаёт ползунок ниже.',
+      wall: 'Проведите стену в любом направлении. Толщину задаёт ползунок ниже.',
       object: 'Выберите объект. Щелчок ставит его на карту, перетаскивание задаёт размер.',
       equipment: 'Выберите прибор. Щёлкните по карте, чтобы поставить его.',
       erase: 'Нажмите на стену или предмет, чтобы удалить его.',
       pan: 'Тяните пустое место, чтобы двигать камеру. Нажмите на источник, стену или предмет, чтобы открыть настройки.'
     };
     ui.toolHint.textContent = hints[tool]; ui.canvasHint.textContent = hints[tool];
-    document.getElementById('wallModeHint').textContent = 'Протяните стену на карте. Чтобы изменить готовую стену, нажмите «Выбрать» и щёлкните по ней.';
+    document.getElementById('wallModeHint').textContent = 'Протяните стену в любом направлении. Чтобы изменить готовую стену, нажмите «Выбрать» и щёлкните по ней.';
     document.getElementById('objectModeHint').textContent = 'Выберите тип и нажмите на карту. Готовый объект можно выбрать и заменить.';
     document.getElementById('equipmentModeHint').textContent = 'Выберите устройство и нажмите на карту. Прибор можно перетащить инструментом «Выбрать» или задать X и Y в метрах.';
     updateEquipmentPanel();
@@ -355,7 +373,8 @@
   ui.thickness.addEventListener('input', () => {
     if (state.tool === 'pan' && state.selectedWall) {
       const wall = state.selectedWall, thick = +ui.thickness.value / 100;
-      if (wall.w >= wall.h) { const center = wall.y + wall.h / 2; wall.h = thick; wall.y = clamp(center - thick / 2, 0, ROOM_H - thick); }
+      if (wall.ax !== undefined) { wall.thickness = thick; updateWallBounds(wall); }
+      else if (wall.w >= wall.h) { const center = wall.y + wall.h / 2; wall.h = thick; wall.y = clamp(center - thick / 2, 0, ROOM_H - thick); }
       else { const center = wall.x + wall.w / 2; wall.w = thick; wall.x = clamp(center - thick / 2, 0, ROOM_W - thick); }
       if (wall.material === 'glass') prepareWall(wall);
       rebuildMedium();
@@ -448,6 +467,7 @@
     for (const src of state.sources) { src.x = (src.x * oldW + shiftX) / width; src.y = (src.y * oldH + shiftY) / height; }
     for (const shape of [...state.walls, ...state.objects]) {
       shape.x += shiftX; shape.y += shiftY;
+      if (shape.ax !== undefined) { shape.ax += shiftX; shape.bx += shiftX; shape.ay += shiftY; shape.by += shiftY; }
     }
     ROOM_W = width; ROOM_H = height; DX = ROOM_W / (VIEW_NX - 1); DY = ROOM_H / (VIEW_NY - 1); DT = BASE_DT * DX / BASE_DX;
     state.cameraX = 0; state.cameraY = 0;
@@ -485,11 +505,19 @@
     if (state.selected === id) state.selected = state.sources[0].id;
     renderSources();
   }
-  function findWall(x, y) { const p = toCanvas(x, y); return state.walls.findIndex(o => { const a = toCanvas(o.x, o.y), b = toCanvas(o.x + o.w, o.y + o.h); return p.x >= a.x - 6 && p.x <= b.x + 6 && p.y >= a.y - 6 && p.y <= b.y + 6; }); }
+  function findWall(x, y) { const p = toCanvas(x, y); return state.walls.findIndex(o => {
+    if (o.ax !== undefined) {
+      const a = toCanvas(o.ax, o.ay), b = toCanvas(o.bx, o.by), point = closestOnSegment(p.x, p.y, a.x, a.y, b.x, b.y);
+      const width = wallThickness(o) * Math.min(state.width / ROOM_W, state.height / ROOM_H) * viewZoom();
+      return Math.hypot(p.x - point.x, p.y - point.y) <= width / 2 + 7;
+    }
+    const a = toCanvas(o.x, o.y), b = toCanvas(o.x + o.w, o.y + o.h);
+    return p.x >= a.x - 6 && p.x <= b.x + 6 && p.y >= a.y - 6 && p.y <= b.y + 6;
+  }); }
   function selectWall(wall) {
     state.selectedWall = wall; state.selectedObject = null;
     ui.material.value = wall.material;
-    ui.thickness.value = clamp(Math.round(Math.min(wall.w, wall.h) * 100), 5, 80);
+    ui.thickness.value = clamp(Math.round(wallThickness(wall) * 100), 5, 80);
     showPanel('wall'); updateReadouts(); updateEquipmentPanel();
     document.getElementById('wallModeHint').textContent = 'Выбрана стена: материал и толщину можно изменить прямо здесь. Повторно выберите «Стена», чтобы рисовать новую.';
   }
@@ -536,11 +564,9 @@
     }
     say(`Теперь это ${spec.name.toLowerCase()}`);
   }
-  function addWall(x, y, length, orientation, material, thicknessCm) {
-    const thick = thicknessCm / 100;
-    let wall;
-    if (orientation === 'horizontal') wall = { x: clamp(x, 0, ROOM_W - length), y: clamp(y - thick / 2, 0, ROOM_H - thick), w: length, h: thick, material };
-    else wall = { x: clamp(x - thick / 2, 0, ROOM_W - thick), y: clamp(y, 0, ROOM_H - length), w: thick, h: length, material };
+  function addWall(x1, y1, x2, y2, material, thicknessCm) {
+    const wall = { ax: clamp(x1, 0, ROOM_W), ay: clamp(y1, 0, ROOM_H), bx: clamp(x2, 0, ROOM_W), by: clamp(y2, 0, ROOM_H), thickness: thicknessCm / 100, material };
+    updateWallBounds(wall);
     state.walls.push(prepareWall(wall)); rebuildMedium(); updateReadouts();
     return wall;
   }
@@ -553,7 +579,7 @@
   canvas.addEventListener('pointerdown', e => {
     e.preventDefault(); canvas.focus({ preventScroll: true }); canvas.setPointerCapture(e.pointerId);
     const p = canvasPoint(e), room = toRoom(p);
-    if (state.tool === 'wall') { state.drag = { kind: 'wall', x: room.x, y: room.y, px: p.x, py: p.y, moved: false }; state.preview = { x: p.x, y: p.y, w: 0, h: 0 }; }
+    if (state.tool === 'wall') { state.drag = { kind: 'wall', x: room.x, y: room.y, px: p.x, py: p.y, moved: false }; state.preview = { kind: 'wall', x1: p.x, y1: p.y, x2: p.x, y2: p.y, thicknessPx: 0 }; }
     else if (state.tool === 'object' || state.tool === 'equipment') { const type = state.tool === 'equipment' ? ui.equipmentType.value : document.getElementById('objectType').value; state.drag = { kind: 'object', x: room.x, y: room.y, px: p.x, py: p.y, type, moved: false }; state.preview = { x: p.x, y: p.y, w: 0, h: 0 }; }
     else if (state.tool === 'erase') { const oi = findObject(room.x, room.y); if (oi >= 0) { const removed = state.objects.splice(oi, 1)[0]; if (state.selectedObject === removed.id) state.selectedObject = null; } else { const idx = findWall(room.x, room.y); if (idx >= 0) { const removed = state.walls.splice(idx, 1)[0]; if (state.selectedWall === removed) state.selectedWall = null; } } rebuildMedium(); updateReadouts(); updateEquipmentPanel(); }
     else if (state.tool === 'source') addSource(room.x, room.y);
@@ -590,9 +616,8 @@
     }
     else {
       if (Math.hypot(p.x - state.drag.px, p.y - state.drag.py) > 8) state.drag.moved = true;
-      const dx = p.x - state.drag.px, dy = p.y - state.drag.py, thickPx = (+ui.thickness.value / 100) * state.width / ROOM_W * viewZoom();
-      if (Math.abs(dx) >= Math.abs(dy)) state.preview = { x: Math.min(state.drag.px, p.x), y: state.drag.py - thickPx / 2, w: Math.max(2, Math.abs(dx)), h: thickPx, orientation: 'horizontal' };
-      else { const tY = (+ui.thickness.value / 100) * state.height / ROOM_H * viewZoom(); state.preview = { x: state.drag.px - tY / 2, y: Math.min(state.drag.py, p.y), w: tY, h: Math.max(2, Math.abs(dy)), orientation: 'vertical' }; }
+      const thicknessPx = (+ui.thickness.value / 100) * Math.min(state.width / ROOM_W, state.height / ROOM_H) * viewZoom();
+      state.preview = { kind: 'wall', x1: state.drag.px, y1: state.drag.py, x2: p.x, y2: p.y, thicknessPx };
     }
   });
   function endPointer() {
@@ -605,11 +630,8 @@
     }
     if (state.drag?.kind === 'objectMove') { rebuildMedium(); updateReadouts(); updateEquipmentPanel(); }
     if (state.drag?.kind === 'wall' && state.preview && state.drag.moved) {
-      const p = state.preview, roomStart = toRoom({ x: p.x, y: p.y });
-      const len = p.orientation === 'horizontal' ? p.w / (state.width * viewZoom()) * ROOM_W : p.h / (state.height * viewZoom()) * ROOM_H;
-      const wallX = roomStart.x + (p.orientation === 'vertical' ? +ui.thickness.value / 200 : 0);
-      const wallY = roomStart.y + (p.orientation === 'horizontal' ? +ui.thickness.value / 200 : 0);
-      if (len > .12) addWall(wallX, wallY, len, p.orientation, ui.material.value, +ui.thickness.value);
+      const p = state.preview, start = toRoom({ x: p.x1, y: p.y1 }), end = toRoom({ x: p.x2, y: p.y2 });
+      if (Math.hypot(end.x - start.x, end.y - start.y) > .12) addWall(start.x, start.y, end.x, end.y, ui.material.value, +ui.thickness.value);
       else say('Стена слишком короткая');
     }
     if (state.drag?.kind === 'source') renderSources();
@@ -633,20 +655,74 @@
       faceB[position] = courant / faceDivisor;
     }
   }
+  function closestSegmentPair(a, b) {
+    const [ax, ay, bx, by] = a, [cx, cy, dx, dy] = b;
+    const rx = bx - ax, ry = by - ay, sx = dx - cx, sy = dy - cy;
+    const cross = (x, y, u, v) => x * v - y * u;
+    const divisor = cross(rx, ry, sx, sy);
+    if (Math.abs(divisor) > 1e-9) {
+      const t = cross(cx - ax, cy - ay, sx, sy) / divisor;
+      const u = cross(cx - ax, cy - ay, rx, ry) / divisor;
+      if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+        const x = ax + rx * t, y = ay + ry * t;
+        return { ax: x, ay: y, bx: x, by: y, distance: 0 };
+      }
+    }
+    const candidates = [];
+    for (const [x, y] of [[ax, ay], [bx, by]]) {
+      const p = closestOnSegment(x, y, cx, cy, dx, dy);
+      candidates.push({ ax: x, ay: y, bx: p.x, by: p.y, distance: Math.hypot(x - p.x, y - p.y) });
+    }
+    for (const [x, y] of [[cx, cy], [dx, dy]]) {
+      const p = closestOnSegment(x, y, ax, ay, bx, by);
+      candidates.push({ ax: p.x, ay: p.y, bx: x, by: y, distance: Math.hypot(x - p.x, y - p.y) });
+    }
+    return candidates.reduce((best, item) => item.distance < best.distance ? item : best);
+  }
+  function shapeEdges(shape) {
+    if (shape.ax !== undefined) return [[shape.ax, shape.ay, shape.bx, shape.by]];
+    const x = shape.x, y = shape.y, right = x + shape.w, bottom = y + shape.h;
+    return [[x, y, right, y], [right, y, right, bottom], [right, bottom, x, bottom], [x, bottom, x, y]];
+  }
+  function contactGeometry(a, b) {
+    if (a.ax === undefined && b.ax === undefined) {
+      const gapX = Math.max(0, a.x - b.x - b.w, b.x - a.x - a.w);
+      const gapY = Math.max(0, a.y - b.y - b.h, b.y - a.y - a.h);
+      const ax = clamp(b.x + b.w / 2, a.x, a.x + a.w), ay = clamp(b.y + b.h / 2, a.y, a.y + a.h);
+      const bx = clamp(a.x + a.w / 2, b.x, b.x + b.w), by = clamp(a.y + a.h / 2, b.y, b.y + b.h);
+      return { ax, ay, bx, by, gap: Math.max(gapX, gapY) };
+    }
+    let best = { distance: Infinity };
+    for (const edgeA of shapeEdges(a)) for (const edgeB of shapeEdges(b)) {
+      const pair = closestSegmentPair(edgeA, edgeB);
+      if (pair.distance < best.distance) best = pair;
+    }
+    for (const [wall, rect] of [[a, b], [b, a]]) {
+      if (wall.ax === undefined || rect.ax !== undefined) continue;
+      for (const point of [[wall.ax, wall.ay], [wall.bx, wall.by]]) {
+        if (point[0] >= rect.x && point[0] <= rect.x + rect.w && point[1] >= rect.y && point[1] <= rect.y + rect.h) {
+          best = { ax: point[0], ay: point[1], bx: point[0], by: point[1], distance: 0 };
+          break;
+        }
+      }
+    }
+    return { ...best, gap: Math.max(0, best.distance - (a.ax !== undefined ? a.thickness / 2 : 0) - (b.ax !== undefined ? b.thickness / 2 : 0)) };
+  }
+  function positionAlongShape(shape, x, y) {
+    if (shape.ax !== undefined) return closestOnSegment(x, y, shape.ax, shape.ay, shape.bx, shape.by).t;
+    return shape.w >= shape.h ? (x - shape.x) / Math.max(.001, shape.w) : (y - shape.y) / Math.max(.001, shape.h);
+  }
   function rebuildVibrationContacts() {
     const shapes = [...state.walls, ...state.objects].filter(shape => shape.material && vibrationProps[shape.material] && !shape.broken && shape.x < ROOM_W && shape.y < ROOM_H && shape.x + shape.w > 0 && shape.y + shape.h > 0);
     for (const shape of shapes) prepareVibration(shape);
     state.vibrationContacts = [];
     for (let i = 0; i < shapes.length; i++) for (let j = i + 1; j < shapes.length; j++) {
       const a = shapes[i], b = shapes[j];
-      const gapX = Math.max(0, a.x - b.x - b.w, b.x - a.x - a.w);
-      const gapY = Math.max(0, a.y - b.y - b.h, b.y - a.y - a.h);
-      if (gapX > .25 || gapY > .25) continue;
-      const ax = clamp(b.x + b.w / 2, a.x, a.x + a.w), ay = clamp(b.y + b.h / 2, a.y, a.y + a.h);
-      const bx = clamp(a.x + a.w / 2, b.x, b.x + b.w), by = clamp(a.y + a.h / 2, b.y, b.y + b.h);
-      const aPosition = a.w >= a.h ? (ax - a.x) / Math.max(.001, a.w) : (ay - a.y) / Math.max(.001, a.h);
-      const bPosition = b.w >= b.h ? (bx - b.x) / Math.max(.001, b.w) : (by - b.y) / Math.max(.001, b.h);
-      const weight = Math.min(.55, Math.sqrt(vibrationProps[a.material].contact * vibrationProps[b.material].contact) * 1.8) * (1 - Math.max(gapX, gapY) / .3);
+      const contact = contactGeometry(a, b);
+      if (contact.gap > .25) continue;
+      const aPosition = positionAlongShape(a, contact.ax, contact.ay);
+      const bPosition = positionAlongShape(b, contact.bx, contact.by);
+      const weight = Math.min(.55, Math.sqrt(vibrationProps[a.material].contact * vibrationProps[b.material].contact) * 1.8) * (1 - contact.gap / .3);
       state.vibrationContacts.push({ a, b, ai: clamp(Math.round(aPosition * 39), 0, 39), bi: clamp(Math.round(bPosition * 39), 0, 39), weight });
     }
   }
@@ -659,11 +735,23 @@
       const y0 = clamp(PAD_Y + Math.floor(y / DY), 0, NY - 1), y1 = clamp(PAD_Y + Math.ceil((y + h) / DY), 0, NY - 1);
       for (let row = y0; row <= y1; row++) for (let col = x0; col <= x1; col++) state.medium[row * NX + col] = id;
     }
+    function paintSegment(wall, id) {
+      const radius = wall.thickness / 2 + Math.min(DX, DY) * .55;
+      const x0 = clamp(PAD_X + Math.floor((Math.min(wall.ax, wall.bx) - radius) / DX), 0, NX - 1);
+      const x1 = clamp(PAD_X + Math.ceil((Math.max(wall.ax, wall.bx) + radius) / DX), 0, NX - 1);
+      const y0 = clamp(PAD_Y + Math.floor((Math.min(wall.ay, wall.by) - radius) / DY), 0, NY - 1);
+      const y1 = clamp(PAD_Y + Math.ceil((Math.max(wall.ay, wall.by) + radius) / DY), 0, NY - 1);
+      for (let row = y0; row <= y1; row++) for (let col = x0; col <= x1; col++) {
+        const x = (col - PAD_X) * DX, y = (row - PAD_Y) * DY;
+        if (wallDistance(wall, x, y) <= radius) state.medium[row * NX + col] = id;
+      }
+    }
     for (const shape of [...state.walls, ...state.objects]) {
       if (!shape.material || shape.broken || shape.x + shape.w <= 0 || shape.y + shape.h <= 0 || shape.x >= ROOM_W || shape.y >= ROOM_H) continue;
       if (vibrationProps[shape.material]) prepareVibration(shape);
       const id = materialIndex(shape.material);
-      if (shape.type === 'hollowPipe') {
+      if (shape.ax !== undefined) paintSegment(shape, id);
+      else if (shape.type === 'hollowPipe') {
         const shell = Math.max(Math.min(shape.w, shape.h) * .16, Math.min(DX, DY) * .4);
         if (shape.w >= shape.h) {
           paint(shape.x, shape.y, shape.w, shell, id);
@@ -751,6 +839,21 @@
     }
     for (const shape of shapes) {
       const props = vibrationProps[shape.material];
+      if (shape.ax !== undefined) {
+        const length = Math.hypot(shape.bx - shape.ax, shape.by - shape.ay);
+        const nx = -(shape.by - shape.ay) / length, ny = (shape.bx - shape.ax) / length;
+        const offset = Math.max(DX, DY, shape.thickness * .55);
+        advanceVibration(shape.vibration, (j, last) => {
+          const point = pointOnWall(shape, j / last);
+          return (pressureAt(point.x - nx * offset, point.y - ny * offset) + pressureAt(point.x + nx * offset, point.y + ny * offset)) * props.drive + shape.contactDrive[j];
+        }, props.stiffness, props.damping);
+        for (let j = 0; j < shape.vibration.current.length; j += 4) {
+          const point = pointOnWall(shape, j / (shape.vibration.current.length - 1));
+          radiateAt(point.x - nx * offset, point.y - ny * offset, shape.vibration.current[j] * props.radiate);
+          radiateAt(point.x + nx * offset, point.y + ny * offset, shape.vibration.current[j] * props.radiate);
+        }
+        continue;
+      }
       const horizontal = shape.w >= shape.h, length = horizontal ? shape.w : shape.h;
       const middle = horizontal ? shape.y + shape.h / 2 : shape.x + shape.w / 2;
       const edgeA = horizontal ? shape.y - Math.max(DY, shape.h * .55) : shape.x - Math.max(DX, shape.w * .55);
@@ -895,6 +998,23 @@
   function lengthThroughShape(x0, y0, x1, y1, shape) {
     const dx = x1 - x0, dy = y1 - y0, length = Math.hypot(dx, dy);
     if (length < .0001) return 0;
+    if (shape.ax !== undefined) {
+      const wallLength = Math.hypot(shape.bx - shape.ax, shape.by - shape.ay);
+      if (wallLength < .0001) return 0;
+      const ux = (shape.bx - shape.ax) / wallLength, uy = (shape.by - shape.ay) / wallLength;
+      const ox = x0 - shape.ax, oy = y0 - shape.ay;
+      const along = ox * ux + oy * uy, across = -ox * uy + oy * ux;
+      const deltaAlong = dx * ux + dy * uy, deltaAcross = -dx * uy + dy * ux;
+      let enter = 0, leave = 1;
+      for (const [start, delta, low, high] of [[along, deltaAlong, 0, wallLength], [across, deltaAcross, -shape.thickness / 2, shape.thickness / 2]]) {
+        if (Math.abs(delta) < 1e-9) { if (start < low || start > high) return 0; continue; }
+        let a = (low - start) / delta, b = (high - start) / delta;
+        if (a > b) [a, b] = [b, a];
+        enter = Math.max(enter, a); leave = Math.min(leave, b);
+        if (leave <= enter) return 0;
+      }
+      return (leave - enter) * length;
+    }
     let enter = 0, leave = 1;
     for (const [start, delta, low, high] of [[x0, dx, shape.x, shape.x + shape.w], [y0, dy, shape.y, shape.y + shape.h]]) {
       if (Math.abs(delta) < 1e-9) { if (start < low || start > high) return 0; continue; }
@@ -999,7 +1119,8 @@
     let closest = null, shortest = Infinity;
     for (const shape of [...state.walls, ...state.objects]) {
       if (!vibrationProps[shape.material]) continue;
-      const dx = Math.max(shape.x - cx, 0, cx - shape.x - shape.w), dy = Math.max(shape.y - cy, 0, cy - shape.y - shape.h), distance = Math.hypot(dx, dy);
+      const dx = Math.max(shape.x - cx, 0, cx - shape.x - shape.w), dy = Math.max(shape.y - cy, 0, cy - shape.y - shape.h);
+      const distance = shape.ax !== undefined ? Math.max(0, wallDistance(shape, cx, cy) - shape.thickness / 2) : Math.hypot(dx, dy);
       if (distance < shortest) { shortest = distance; closest = shape; }
     }
     return shortest <= 1.2 ? closest : null;
@@ -1057,6 +1178,20 @@
   }
   function drawStructuralWaves(shape, x, y, w, h) {
     if (!shape.vibration || vibrationLevel(shape) === 0 || Math.max(w, h) < 18) return;
+    if (shape.ax !== undefined) {
+      const a = toCanvas(shape.ax, shape.ay), b = toCanvas(shape.bx, shape.by);
+      const length = Math.hypot(b.x - a.x, b.y - a.y), nx = -(b.y - a.y) / length, ny = (b.x - a.x) / length;
+      ctx.save(); ctx.beginPath();
+      for (let j = 0; j < shape.vibration.current.length; j++) {
+        const t = j / (shape.vibration.current.length - 1);
+        const displacement = Math.tanh(shape.vibration.current[j] * 9000) * 5;
+        const px = a.x + (b.x - a.x) * t + nx * displacement, py = a.y + (b.y - a.y) * t + ny * displacement;
+        if (!j) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      const color = vibrationProps[shape.material]?.color || '#ffe08a';
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.shadowColor = color; ctx.shadowBlur = 9; ctx.stroke(); ctx.restore();
+      return;
+    }
     const horizontal = w >= h, span = horizontal ? w : h, thickness = horizontal ? h : w;
     const traces = [{ values: shape.vibration.current, color: vibrationProps[shape.material]?.color || '#ffe08a' }];
     if (shape.cavity) traces.push({ values: shape.cavity.current, color: '#79e9ff' });
@@ -1076,6 +1211,39 @@
   function drawWalls() {
     for (const wall of state.walls) {
       const m = materials[wall.material], a = toCanvas(wall.x, wall.y), b = toCanvas(wall.x + wall.w, wall.y + wall.h), x = a.x, y = a.y, ww = b.x - a.x, hh = b.y - a.y;
+      if (wall.ax !== undefined) {
+        const start = toCanvas(wall.ax, wall.ay), end = toCanvas(wall.bx, wall.by);
+        const length = Math.hypot(end.x - start.x, end.y - start.y);
+        const width = Math.max(2, wall.thickness * Math.min(state.width / ROOM_W, state.height / ROOM_H) * viewZoom());
+        ctx.save(); ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(start.x, start.y); ctx.lineTo(end.x, end.y);
+        if (wall.broken) { ctx.setLineDash([5, 9]); ctx.strokeStyle = '#a9e7efaa'; ctx.lineWidth = Math.max(2, width * .45); ctx.stroke(); }
+        else {
+          ctx.strokeStyle = m.color + '75'; ctx.lineWidth = width + 3; ctx.stroke();
+          ctx.strokeStyle = m.color + 'e0'; ctx.lineWidth = width; ctx.stroke();
+          const nx = -(end.y - start.y) / length, ny = (end.x - start.x) / length;
+          ctx.strokeStyle = m.color + 'a0'; ctx.lineWidth = 1;
+          for (let distance = 10; distance < length; distance += 12) {
+            const t = distance / length, px = start.x + (end.x - start.x) * t, py = start.y + (end.y - start.y) * t;
+            ctx.beginPath(); ctx.moveTo(px - nx * width * .35 - 4, py - ny * width * .35 - 4); ctx.lineTo(px + nx * width * .35 + 4, py + ny * width * .35 + 4); ctx.stroke();
+          }
+          if (wall.vibration) drawStructuralWaves(wall, x, y, ww, hh);
+          if (wall.material === 'glass' && wall.damage > .08) {
+            const middle = pointOnWall(wall, .5), center = toCanvas(middle.x, middle.y);
+            ctx.strokeStyle = '#efffffd9'; ctx.lineWidth = 1 + wall.damage; ctx.beginPath();
+            ctx.moveTo(center.x - nx * width, center.y - ny * width); ctx.lineTo(center.x + nx * width, center.y + ny * width); ctx.stroke();
+          }
+          if (wall.material === 'glass' && length > 65) {
+            ctx.fillStyle = '#c9f7ff'; ctx.font = '600 10px system-ui'; ctx.textAlign = 'center';
+            ctx.fillText(`${wall.resonance} Гц`, (start.x + end.x) / 2, (start.y + end.y) / 2 - width / 2 - 8);
+          }
+        }
+        if (wall === state.selectedWall) {
+          ctx.beginPath(); ctx.moveTo(start.x, start.y); ctx.lineTo(end.x, end.y);
+          ctx.setLineDash([6, 4]); ctx.strokeStyle = '#f5fff0'; ctx.lineWidth = width + 8; ctx.stroke();
+        }
+        ctx.restore(); continue;
+      }
       if (wall.broken) {
         ctx.save(); ctx.strokeStyle = '#a9e7ef88'; ctx.lineWidth = 1.5; ctx.setLineDash([4, 6]); ctx.strokeRect(x, y, ww, hh); ctx.setLineDash([]);
         const horizontal = ww >= hh, span = horizontal ? ww : hh;
@@ -1187,7 +1355,14 @@
     const z = viewZoom(), left = state.width * (.5 - z / 2) + state.cameraX, top = state.height * (.5 - z / 2) + state.cameraY, viewWidth = state.width * z, viewHeight = state.height * z;
     ctx.drawImage(fieldCanvas, left - 1, top - 1, viewWidth + 2, viewHeight + 2); ctx.filter = 'none';
     drawGrid(); drawWalls(); drawObjects(); drawSources();
-    if (state.preview) { ctx.fillStyle = '#b5ff7420'; ctx.strokeStyle = '#b5ff74'; ctx.setLineDash([5, 4]); ctx.fillRect(state.preview.x, state.preview.y, state.preview.w, state.preview.h); ctx.strokeRect(state.preview.x, state.preview.y, state.preview.w, state.preview.h); ctx.setLineDash([]); }
+    if (state.preview) {
+      ctx.save(); ctx.fillStyle = '#b5ff7420'; ctx.strokeStyle = '#b5ff74'; ctx.setLineDash([5, 4]);
+      if (state.preview.kind === 'wall') {
+        ctx.lineCap = 'round'; ctx.lineWidth = Math.max(3, state.preview.thicknessPx);
+        ctx.beginPath(); ctx.moveTo(state.preview.x1, state.preview.y1); ctx.lineTo(state.preview.x2, state.preview.y2); ctx.stroke();
+      } else { ctx.fillRect(state.preview.x, state.preview.y, state.preview.w, state.preview.h); ctx.strokeRect(state.preview.x, state.preview.y, state.preview.w, state.preview.h); }
+      ctx.restore();
+    }
     requestAnimationFrame(draw);
   }
 
@@ -1358,4 +1533,3 @@
 </script>
 </body>
 </html>
-
