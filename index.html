@@ -28,6 +28,7 @@
     .sweep-btn{width:100%;margin-top:9px;min-height:36px;color:#cdeaff;border-color:#477484;font-size:11px}.sweep-btn[hidden]{display:none}.pulse-btn{width:100%;margin-top:9px;min-height:38px;color:#dfffbf;border-color:#6a9d55;font-size:12px;font-weight:700}.pulse-btn[hidden],#pulseHint[hidden]{display:none}
     .stage-footer{align-items:center;flex-wrap:wrap}.stage-status{display:flex;flex-direction:column;gap:4px;min-width:180px}.stage-status #soundState{font-size:10px;line-height:1.25}.map-wave-controls{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;margin-left:auto;padding:5px 6px;border:1px solid #34534c;border-radius:9px;background:#0b191d}.map-source-select{width:112px;height:29px;padding:0 6px;border:1px solid #365049;border-radius:6px;background:#14252a;color:#e5f4e8;font-size:11px}.map-wave-switch{display:flex;gap:4px}.map-wave-mode{min-height:29px;padding:2px 7px;border:1px solid #344b4a;border-radius:6px;background:#132429;color:#bbcfcc;font-size:10px;white-space:nowrap;cursor:pointer}.map-wave-mode[aria-pressed="true"]{border-color:#a5dd77;background:#b5ff7426;color:#dbffbd;font-weight:700}.map-pulse-btn{min-height:29px;padding:2px 9px;border:1px solid #a5dd77;border-radius:6px;background:#b5ff74;color:#10200f;font-size:10px;font-weight:750;white-space:nowrap;cursor:pointer}.map-pulse-btn:hover{background:#d0ffa8}.map-pulse-btn[hidden]{display:none}.map-pulse-btn.secondary{background:#18302a;color:#d5ffbb}.map-pulse-btn.secondary:hover{background:#264235}@media(max-width:900px){.stage-status{min-width:130px}.map-wave-controls{max-width:100%}}@media(max-width:560px){.stage-footer{align-items:flex-start}.stage-status{width:100%}.map-wave-controls{width:100%;justify-content:flex-end}.map-source-select{flex:1;min-width:105px}.map-wave-mode{font-size:9px}}
     .equipment-coordinates{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.equipment-coordinates[hidden]{display:none}.equipment-coordinates label{display:flex;flex-direction:column;gap:5px;color:#a9bfbc;font-size:11px}.equipment-coordinates input{width:100%;height:34px;padding:0 8px;border:1px solid #34535b;border-radius:7px;background:#0c1c22;color:#ebf5ee}
+    .language-select{width:104px;height:40px;padding:0 8px;border:1px solid var(--line);border-radius:10px;background:#132027;color:var(--text);cursor:pointer;font-size:12px}.motion-note{margin-top:7px}.motion-controls[hidden]{display:none}.source-pick{grid-template-columns:10px minmax(0,1fr);grid-template-rows:auto auto}.source-dot{grid-row:1 / span 2}.source-meta{grid-column:2;grid-row:2;white-space:normal}@media(max-width:560px){.topbar{flex-wrap:wrap}.top-actions{flex-wrap:wrap;justify-content:flex-end}.language-select{height:37px;width:94px}}
   </style>
 </head>
 <body>
@@ -38,6 +39,7 @@
         <div><div class="eyebrow">Интерактивная модель</div><h1>ВолнаЛаб</h1></div>
       </div>
       <div class="top-actions">
+        <select class="language-select" id="languageSelect" aria-label="Язык сайта"><option value="ru">Русский</option><option value="kk">Қазақша</option><option value="en">English</option></select>
         <span class="model-tag">2D · акустическое поле</span>
         <button class="btn" id="pauseBtn" type="button" aria-label="Приостановить симуляцию"><span id="pauseIcon">Ⅱ</span><span id="pauseText">Пауза</span></button>
         <button class="btn" id="resetBtn" type="button" aria-label="Сбросить сцену"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7v5h5M5.5 16a8 8 0 1 0 .1-8.2L4 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Сбросить</span></button>
@@ -65,6 +67,7 @@
           <div class="control"><div class="control-row"><label for="emissionMode">Режим источника</label></div><select class="select" id="emissionMode"><option value="continuous">Постоянный звук</option><option value="pulse">Одна волна</option></select><button class="btn pulse-btn" id="emitPulse" type="button" hidden>Выпустить одну волну</button><button class="btn pulse-btn" id="emitAllPulses" type="button" hidden>Выпустить вместе</button><p class="mat-note" id="pulseHint" hidden>Каждое нажатие очищает старые волны и запускает короткий импульс. Для одновременного запуска переключите два источника в режим «Одна волна» и нажмите «Выпустить вместе». Анимация замедляется, чтобы можно было видеть отражения.</p></div>
           <div class="control"><div class="control-row"><label for="frequency">Частота</label><span class="value" id="frequencyValue">340 Гц</span></div><div class="slider-line"><span class="slider-end">80</span><input id="frequency" type="range" min="80" max="1000" value="340" step="1" aria-label="Частота звука в герцах"><span class="slider-end" id="frequencyMaxLabel">1000</span></div><canvas class="frequency-preview" id="frequencyPreview" width="240" height="48" aria-label="Как меняется расстояние между волнами при изменении частоты" role="img"></canvas><div class="frequency-caption">Низкая частота — редкие волны, высокая — частые.</div><button class="btn sweep-btn" id="sweepBtn" type="button" hidden>Запустить перебор частот</button></div>
           <div class="control"><div class="control-row"><label for="level">Сила сигнала</label><span class="value" id="levelValue">65%</span></div><div class="slider-line"><span class="slider-end">0</span><input id="level" type="range" min="0" max="100" value="65" step="1" aria-label="Сила сигнала в процентах"><span class="slider-end">100</span></div></div>
+          <div class="control"><div class="control-row"><label for="motionMode">Движение источника</label></div><select class="select" id="motionMode"><option value="still">Не движется</option><option value="linear">По прямой до края</option><option value="bounce">Туда и обратно</option></select><div class="motion-controls" id="motionControls" hidden><div class="control"><div class="control-row"><label for="motionDirection">Направление</label><span class="value" id="motionDirectionValue">0° →</span></div><div class="slider-line"><span class="slider-end">0°</span><input id="motionDirection" type="range" min="0" max="359" value="0" step="1" aria-label="Направление движения источника в градусах"><span class="slider-end">359°</span></div></div><div class="control"><div class="control-row"><label for="motionSpeed">Скорость</label><span class="value" id="motionSpeedValue">1 м/с</span></div><div class="slider-line"><span class="slider-end">0</span><input id="motionSpeed" type="range" min="0" max="20" value="1" step="0.1" aria-label="Скорость движения источника в метрах в секунду"><span class="slider-end">20</span></div></div><p class="mat-note motion-note">0° — вправо, 90° — вниз. Движение останавливается при паузе.</p></div></div>
         </section>
         <section class="block context-panel" id="wallPanel" hidden>
           <div class="block-head"><h2>Стены и слои</h2><span class="small-note" id="wallCount">0 стен</span></div>
@@ -111,12 +114,298 @@
 (() => {
   'use strict';
 
+  // Russian is the source language used by the simulation. Matching the longest
+  // phrases first lets the same catalogue cover static labels and live readouts.
+  const entries = [
+    ['ВолнаЛаб — 2D лаборатория звука', 'ТолқынЗертхана — 2D дыбыс зертханасы', 'VolnaLab — 2D sound lab'],
+    ['ВолнаЛаб — интерактивная 2D лаборатория звука: волны, частота, материалы, препятствия и измерительные приборы.', 'ТолқынЗертхана — толқындар, жиілік, материалдар, кедергілер мен өлшеу құралдары бар интерактивті 2D дыбыс зертханасы.', 'VolnaLab is an interactive 2D sound lab with waves, frequency, materials, obstacles, and measuring tools.'],
+    ['Интерактивная модель', 'Интерактивті модель', 'Interactive model'],
+    ['2D · акустическое поле', '2D · акустикалық өріс', '2D · acoustic field'],
+    ['Язык сайта', 'Сайт тілі', 'Site language'],
+    ['Приостановить симуляцию', 'Модельдеуді кідірту', 'Pause simulation'],
+    ['Сбросить сцену', 'Сахнаны бастапқы күйге келтіру', 'Reset scene'],
+    ['Выключить звук', 'Дыбысты өшіру', 'Turn sound off'],
+    ['Включить звук', 'Дыбысты қосу', 'Turn sound on'],
+    ['Продолжить', 'Жалғастыру', 'Resume'],
+    ['Пауза', 'Кідірту', 'Pause'],
+    ['Сбросить', 'Қалпына келтіру', 'Reset'],
+    ['Панель акустической симуляции', 'Акустикалық модельдеу панелі', 'Acoustic simulation panel'],
+    ['Настройки сцены', 'Сахна баптаулары', 'Scene settings'],
+    ['Инструмент сцены', 'Сахна құралы', 'Scene tool'],
+    ['Выберите инструмент', 'Құралды таңдаңыз', 'Choose a tool'],
+    ['Добавить источник звука', 'Дыбыс көзін қосу', 'Add a sound source'],
+    ['Нарисовать стену под любым углом', 'Қабырғаны кез келген бұрышпен салу', 'Draw a wall at any angle'],
+    ['Добавить предмет интерьера или звукопоглотитель', 'Жиһаз немесе дыбыс жұтқыш қосу', 'Add furniture or a sound absorber'],
+    ['Поставить специальный прибор или акустическое оборудование', 'Өлшеу құралын немесе акустикалық жабдықты қою', 'Place a measuring device or acoustic equipment'],
+    ['Удалить стену или предмет', 'Қабырғаны немесе затты өшіру', 'Erase a wall or object'],
+    ['Выбрать источник, стену, объект или прибор и открыть его настройки', 'Дыбыс көзін, қабырғаны, нысанды немесе құралды таңдап, баптау', 'Select a source, wall, object, or device to edit it'],
+    ['Звук', 'Дыбыс', 'Sound'], ['Стена', 'Қабырға', 'Wall'], ['Объект', 'Нысан', 'Object'],
+    ['Приборы', 'Құралдар', 'Devices'], ['Стереть', 'Өшіру', 'Erase'], ['Выбрать', 'Таңдау', 'Select'],
+    ['Щёлкните по полю, чтобы добавить источник. Выберите «Стена» и протяните её под любым углом.', 'Дыбыс көзін қосу үшін өрісті басыңыз. «Қабырға» құралын таңдап, оны кез келген бағытта созыңыз.', 'Click the field to add a source. Choose “Wall” and drag in any direction.'],
+    ['Щёлкните по полю, чтобы добавить ещё один источник звука.', 'Тағы бір дыбыс көзін қосу үшін өрісті басыңыз.', 'Click the field to add another sound source.'],
+    ['Проведите стену в любом направлении. Толщину задаёт ползунок ниже.', 'Қабырғаны кез келген бағытта сызыңыз. Қалыңдығын төмендегі сырғытпа анықтайды.', 'Drag a wall in any direction. Set its thickness with the slider below.'],
+    ['Выберите объект. Щелчок ставит его на карту, перетаскивание задаёт размер.', 'Нысанды таңдаңыз. Басу оны картаға қояды, ал сүйреу өлшемін белгілейді.', 'Choose an object. Click to place it or drag to set its size.'],
+    ['Выберите прибор. Щёлкните по карте, чтобы поставить его.', 'Құралды таңдаңыз. Оны қою үшін картаны басыңыз.', 'Choose a device and click the map to place it.'],
+    ['Нажмите на стену или предмет, чтобы удалить его.', 'Қабырғаны немесе затты өшіру үшін оны басыңыз.', 'Click a wall or object to remove it.'],
+    ['Тяните пустое место, чтобы двигать камеру. Нажмите на источник, стену или предмет, чтобы открыть настройки.', 'Камераны жылжыту үшін бос жерді сүйреңіз. Баптау үшін дыбыс көзін, қабырғаны немесе затты басыңыз.', 'Drag empty space to move the camera. Click a source, wall, or object to edit it.'],
+    ['Источники звука', 'Дыбыс көздері', 'Sound sources'],
+    ['Параметры сигнала', 'Сигнал параметрлері', 'Signal settings'],
+    ['Форма сигнала', 'Сигнал пішіні', 'Waveform'],
+    ['Чистый тон', 'Таза тон', 'Pure tone'], ['Прямоугольная', 'Тікбұрышты', 'Square wave'],
+    ['Пилообразная', 'Ара тісті', 'Sawtooth'], ['Белый шум', 'Ақ шу', 'White noise'],
+    ['Режим источника', 'Дыбыс көзі режимі', 'Source mode'],
+    ['Постоянный звук', 'Үздіксіз дыбыс', 'Continuous sound'], ['Одна волна', 'Бір толқын', 'Single wave'],
+    ['Выпустить одну волну', 'Бір толқынды жіберу', 'Emit one wave'], ['Выпустить вместе', 'Бірге жіберу', 'Emit together'],
+    ['Каждое нажатие очищает старые волны и запускает короткий импульс. Для одновременного запуска переключите два источника в режим «Одна волна» и нажмите «Выпустить вместе». Анимация замедляется, чтобы можно было видеть отражения.', 'Әр басу ескі толқындарды тазалап, қысқа импульс жібереді. Екі көзді «Бір толқын» режиміне ауыстырып, «Бірге жіберу» түймесін басыңыз. Шағылысты көру үшін анимация баяулайды.', 'Each press clears old waves and emits a short pulse. To emit from two sources at once, set both to “Single wave” and press “Emit together”. The animation slows down so you can see reflections.'],
+    ['Частота звука в герцах', 'Дыбыс жиілігі, герц', 'Sound frequency in hertz'],
+    ['Как меняется расстояние между волнами при изменении частоты', 'Жиілік өзгергенде толқын аралығы қалай өзгереді', 'How wave spacing changes with frequency'],
+    ['Низкая частота — редкие волны, высокая — частые.', 'Төмен жиілікте толқындар сирек, жоғары жиілікте жиі болады.', 'Low frequency means wider wave spacing; high frequency means tighter spacing.'],
+    ['Запустить перебор частот', 'Жиілікті айналдырып шығу', 'Start frequency sweep'],
+    ['Остановить на текущей частоте', 'Ағымдағы жиілікте тоқтату', 'Stop at current frequency'],
+    ['Сила сигнала в процентах', 'Сигнал күші, пайызбен', 'Signal strength in percent'],
+    ['Движение источника', 'Дыбыс көзінің қозғалысы', 'Source movement'],
+    ['Не движется', 'Қозғалмайды', 'Stationary'],
+    ['По прямой до края', 'Шетіне дейін түзу', 'Straight to edge'],
+    ['Туда и обратно', 'Ілгері-кейін', 'Back and forth'],
+    ['Направление движения источника в градусах', 'Дыбыс көзі қозғалысының бағыты, градуспен', 'Source direction in degrees'],
+    ['Скорость движения источника в метрах в секунду', 'Дыбыс көзі жылдамдығы, метр/секундпен', 'Source speed in metres per second'],
+    ['0° — вправо, 90° — вниз. Движение останавливается при паузе.', '0° — оңға, 90° — төмен. Кідірту кезінде қозғалыс тоқтайды.', '0° points right and 90° points down. Motion pauses with the simulation.'],
+    ['Направление', 'Бағыт', 'Direction'], ['Скорость', 'Жылдамдық', 'Speed'],
+    ['Стены и слои', 'Қабырғалар мен қабаттар', 'Walls and layers'],
+    ['Материал слоя', 'Қабат материалы', 'Layer material'], ['Толщина слоя', 'Қабат қалыңдығы', 'Layer thickness'],
+    ['Толщина слоя в сантиметрах', 'Қабат қалыңдығы, сантиметрмен', 'Layer thickness in centimetres'],
+    ['Свойства слоя будут показаны здесь.', 'Қабат қасиеттері осында көрсетіледі.', 'Layer properties appear here.'],
+    ['Настроить источник под стекло', 'Көзді шыны резонансына келтіру', 'Tune source to glass'],
+    ['Протяните стену в любом направлении. Чтобы изменить готовую стену, нажмите «Выбрать» и щёлкните по ней.', 'Қабырғаны кез келген бағытта созыңыз. Дайын қабырғаны өзгерту үшін «Таңдау» түймесін басып, оны таңдаңыз.', 'Drag a wall in any direction. To edit a wall, choose “Select” and click it.'],
+    ['Выбрана стена: материал и толщину можно изменить прямо здесь. Повторно выберите «Стена», чтобы рисовать новую.', 'Қабырға таңдалды: материалы мен қалыңдығын осы жерде өзгертіңіз. Жаңа қабырға салу үшін «Қабырға» құралын қайта таңдаңыз.', 'Wall selected: edit its material and thickness here. Choose “Wall” again to draw a new one.'],
+    ['Показать пример: бетон — вата — бетон', 'Үлгі: бетон — мақта — бетон', 'Show example: concrete — wool — concrete'],
+    ['мебель и панели', 'жиһаз және панельдер', 'furniture and panels'],
+    ['Тип объекта', 'Нысан түрі', 'Object type'],
+    ['Выберите тип и нажмите на карту. Готовый объект можно выбрать и заменить.', 'Түрін таңдап, картаны басыңыз. Дайын нысанды таңдап, алмастыруға болады.', 'Choose a type and click the map. You can select and replace an existing object.'],
+    ['Выбран объект: выбор другого типа заменит его. Перетащите объект, чтобы переместить.', 'Нысан таңдалды: басқа түрін таңдау оны алмастырады. Жылжыту үшін нысанды сүйреңіз.', 'Object selected: choosing another type replaces it. Drag the object to move it.'],
+    ['Специальное оборудование', 'Арнайы жабдық', 'Special equipment'],
+    ['13 устройств', '13 құрылғы', '13 devices'],
+    ['Выберите акустическое оборудование', 'Акустикалық жабдықты таңдаңыз', 'Choose acoustic equipment'],
+    ['Измерительные приборы', 'Өлшеу құралдары', 'Measuring devices'],
+    ['Управление звуком', 'Дыбысты басқару', 'Sound control'],
+    ['Поставить на карте', 'Картаға қою', 'Place on map'],
+    ['Выберите устройство и нажмите на карту. Прибор можно перетащить инструментом «Выбрать» или задать X и Y в метрах.', 'Құрылғыны таңдап, картаны басыңыз. Оны «Таңдау» құралымен сүйреңіз немесе X пен Y мәндерін метрмен енгізіңіз.', 'Choose a device and click the map. Drag it with “Select” or enter X and Y in metres.'],
+    ['Выбран прибор: выбор другого типа заменит его. Перетащите прибор, чтобы переместить.', 'Құрал таңдалды: басқа түрін таңдау оны алмастырады. Жылжыту үшін сүйреңіз.', 'Device selected: choosing another type replaces it. Drag it to move it.'],
+    ['Положение прибора по горизонтали в метрах', 'Құралдың көлденең орны, метрмен', 'Device horizontal position in metres'],
+    ['Положение прибора по вертикали в метрах', 'Құралдың тік орны, метрмен', 'Device vertical position in metres'],
+    ['Поставьте балку или трубу рядом с источником и датчик вибрации рядом с металлом. Цветные линии показывают колебания стенок и воздуха внутри трубы. * Децибелы и вибрация в модели условные.', 'Арқалықты немесе құбырды дыбыс көзіне, ал діріл датчигін металға жақын қойыңыз. Түрлі түсті сызықтар қабырғалар мен құбыр ішіндегі ауаның тербелісін көрсетеді. * Децибел мен діріл мәндері шартты.', 'Place a beam or pipe near a source and a vibration sensor near metal. Colored lines show wall and air vibrations inside the pipe. * Decibel and vibration values are illustrative.'],
+    ['Волновое поле обновляется', 'Толқын өрісі жаңартылуда', 'Wave field is updating'],
+    ['Симуляция приостановлена', 'Модельдеу кідіртілді', 'Simulation paused'],
+    ['Волновое поле', 'Толқын өрісі', 'Wave field'], ['модель в 2D', '2D модель', '2D model'],
+    ['Длина волны', 'Толқын ұзындығы', 'Wavelength'],
+    ['Уровень источника', 'Көздің деңгейі', 'Source level'],
+    ['Область карты', 'Карта аймағы', 'Map area'],
+    ['Удвоить карту ×2', 'Картаны ×2 үлкейту', 'Double map ×2'],
+    ['Кнопка «−» тоже расширяет область до 4608 × 3072 м. Звук постепенно затухает вдали; на очень большой карте мелкие детали волн упрощаются.', '«−» түймесі де аймақты 4608 × 3072 м дейін кеңейтеді. Дыбыс алыста біртіндеп әлсірейді; өте үлкен картада ұсақ толқын бөлшектері жеңілдетіледі.', 'The “−” button also expands the area up to 4608 × 3072 m. Sound fades with distance; fine wave detail is simplified on very large maps.'],
+    ['2D поле распространения звука', '2D дыбыс таралу өрісі', '2D sound propagation field'],
+    ['Волны, отражения и затухание', 'Толқындар, шағылысу және бәсеңдеу', 'Waves, reflections, and fading'],
+    ['Оранжевый — сжатие, голубой — разрежение. Волны отражаются от объектов, но уходят за открытые края поля.', 'Қызғылт сары — сығылу, көгілдір — сиреу. Толқындар нысандардан шағылысады, ал ашық шеттерден шығып кетеді.', 'Orange shows compression; blue shows rarefaction. Waves reflect off objects and leave through open edges.'],
+    ['Очистить волновое поле', 'Толқын өрісін тазалау', 'Clear wave field'],
+    ['Сбросить накопленное звуковое поле', 'Жиналған дыбыс өрісін тазалау', 'Clear accumulated sound field'],
+    ['Симуляция звукового давления. Потяните пустое место для перемещения камеры или используйте стрелки.', 'Дыбыс қысымының модельдеуі. Камераны жылжыту үшін бос жерді сүйреңіз немесе бағыттауыштарды қолданыңыз.', 'Sound pressure simulation. Drag empty space or use the arrow buttons to move the camera.'],
+    ['Масштаб симуляции', 'Модельдеу масштабы', 'Simulation zoom'],
+    ['Сбросить масштаб', 'Масштабты қалпына келтіру', 'Reset zoom'],
+    ['Приблизить', 'Жақындату', 'Zoom in'], ['Отдалить', 'Алыстату', 'Zoom out'],
+    ['Перемещение камеры', 'Камераны жылжыту', 'Move camera'],
+    ['Камера вверх', 'Камераны жоғары', 'Camera up'], ['Камера вниз', 'Камераны төмен', 'Camera down'],
+    ['Камера влево', 'Камераны солға', 'Camera left'], ['Камера вправо', 'Камераны оңға', 'Camera right'],
+    ['Вернуть камеру в центр', 'Камераны ортаға қайтару', 'Center camera'], ['Вернуть в центр', 'Ортаға қайтару', 'Center'],
+    ['Пустое место — двигать камеру · края не отражают звук', 'Бос жер — камераны жылжыту · шеттер дыбысты шағылыстырмайды', 'Drag empty space to move camera · edges do not reflect sound'],
+    ['открытая область', 'ашық аймақ', 'open area'],
+    ['Аудио выключено · включите для прослушивания источников', 'Аудио өшірулі · көздерді тыңдау үшін қосыңыз', 'Audio off · turn it on to hear sources'],
+    ['Аудио включено · одиночная волна прозвучит по кнопке', 'Аудио қосулы · жеке толқынды түйме арқылы жіберіңіз', 'Audio on · press the button to hear a single wave'],
+    ['Режим звуковых волн', 'Дыбыс толқындарының режимі', 'Sound wave mode'],
+    ['Выбрать источник', 'Дыбыс көзін таңдау', 'Choose source'],
+    ['Много волн', 'Көп толқын', 'Many waves'], ['Выбранный', 'Таңдалған', 'Selected'],
+    ['Вместе', 'Бірге', 'Together'],
+    ['Выпустить волны одновременно из всех источников в режиме «Одна волна»', '«Бір толқын» режиміндегі барлық көзден толқындарды бірге жіберу', 'Emit waves simultaneously from all sources in “Single wave” mode'],
+    ['Выпустить волны одновременно', 'Толқындарды бірге жіберу', 'Emit waves together'],
+    ['разрежение', 'сиреу', 'rarefaction'], ['сжатие', 'сығылу', 'compression'], ['тишина', 'тыныштық', 'silence'],
+    ['Бетон', 'Бетон', 'Concrete'], ['Кирпич', 'Кірпіш', 'Brick'], ['Штукатурка', 'Сылақ', 'Plaster'],
+    ['Гипсокартон', 'Гипсокартон', 'Drywall'], ['Дерево', 'Ағаш', 'Wood'], ['Стекло', 'Шыны', 'Glass'],
+    ['Металл · проводит вибрацию', 'Металл · дірілді өткізеді', 'Metal · conducts vibration'],
+    ['Металл', 'Металл', 'Metal'], ['Акустический отражатель · 99%', 'Акустикалық шағылдырғыш · 99%', 'Acoustic reflector · 99%'],
+    ['Акустический отражатель', 'Акустикалық шағылдырғыш', 'Acoustic reflector'],
+    ['Плотная ткань', 'Қалың мата', 'Heavy fabric'], ['Минеральная вата', 'Минералды мақта', 'Mineral wool'],
+    ['Акустический поролон', 'Акустикалық көбік', 'Acoustic foam'], ['Басовая ловушка', 'Бас тұзағы', 'Bass trap'],
+    ['Резина', 'Резеңке', 'Rubber'], ['ГКЛ + минвата + ГКЛ', 'ГКЛ + минералды мақта + ГКЛ', 'Drywall + mineral wool + drywall'],
+    ['Звукоизоляционная мембрана', 'Дыбыс оқшаулайтын мембрана', 'Soundproofing membrane'],
+    ['Стол · дерево', 'Үстел · ағаш', 'Table · wood'], ['Шкаф · дерево', 'Шкаф · ағаш', 'Cabinet · wood'],
+    ['Диван · мягкий', 'Диван · жұмсақ', 'Sofa · soft'], ['Колонна · бетон', 'Бағана · бетон', 'Column · concrete'],
+    ['Стол', 'Үстел', 'Table'], ['Шкаф', 'Шкаф', 'Cabinet'], ['Диван', 'Диван', 'Sofa'],
+    ['СТОЛ', 'ҮСТЕЛ', 'TABLE'], ['ШКАФ', 'ШКАФ', 'CABINET'], ['ДИВАН', 'ДИВАН', 'SOFA'],
+    ['ПОГЛОТИТЕЛЬ', 'ЖҰТҚЫШ', 'ABSORBER'], ['КОЛОННА', 'БАҒАНА', 'COLUMN'], ['РЕЗИНА', 'РЕЗЕҢКЕ', 'RUBBER'],
+    ['СПЕКТР', 'СПЕКТР', 'SPECTRUM'], ['ОСЦ', 'ОСЦ', 'OSC'], ['ВИБР', 'ДІРІЛ', 'VIB'],
+    ['ОТРАЖ.', 'ШАҒЫЛ.', 'REFLECT.'], ['ДИФФ.', 'ДИФФ.', 'DIFF.'], ['ЭКРАН', 'ЭКРАН', 'SCREEN'],
+    ['БАЛКА', 'АРҚАЛЫҚ', 'BEAM'], ['ТРУБА', 'ҚҰБЫР', 'PIPE'], ['МИК', 'МИК', 'MIC'], ['ДБ', 'ДБ', 'DB'],
+    ['ГЕН', 'ГЕН', 'GEN'], ['САБ', 'САБ', 'SUB'], ['БАС', 'БАС', 'BASS'],
+    ['Акустическая панель', 'Акустикалық панель', 'Acoustic panel'], ['Звукопоглощающая панель', 'Дыбыс жұтқыш панель', 'Sound absorbing panel'],
+    ['Колонна', 'Бағана', 'Column'], ['Резиновая прокладка', 'Резеңке төсем', 'Rubber pad'],
+    ['Измерительный микрофон', 'Өлшеу микрофоны', 'Measurement microphone'], ['Шумомер', 'Шу өлшегіш', 'Sound level meter'],
+    ['Анализатор частот', 'Жиілік талдағышы', 'Frequency analyzer'], ['Осциллограф', 'Осциллограф', 'Oscilloscope'],
+    ['Датчик вибрации', 'Діріл датчигі', 'Vibration sensor'], ['Тональный генератор', 'Тон генераторы', 'Tone generator'],
+    ['Сабвуфер', 'Сабвуфер', 'Subwoofer'], ['Отражающая панель', 'Шағылдырғыш панель', 'Reflecting panel'],
+    ['Акустический диффузор', 'Акустикалық диффузор', 'Acoustic diffuser'],
+    ['Звукоизоляционный экран', 'Дыбыс оқшаулағыш экран', 'Sound isolation screen'],
+    ['Металлическая балка', 'Металл арқалық', 'Metal beam'], ['Полая металлическая труба', 'Қуыс металл құбыр', 'Hollow metal pipe'],
+    ['Показывает относительную силу волны в своей точке.', 'Өз нүктесіндегі толқынның салыстырмалы күшін көрсетеді.', 'Shows relative wave strength at its position.'],
+    ['Уровень в условных децибелах модели.', 'Модельдегі шартты децибел деңгейі.', 'Level in illustrative model decibels.'],
+    ['Измеряет частоты пришедшей волны в пяти полосах прямо в этой точке.', 'Осы нүктеге жеткен толқын жиілігін бес жолақта өлшейді.', 'Measures incoming wave frequencies in five bands at this point.'],
+    ['Показывает форму волны, измеренную в выбранной точке.', 'Таңдалған нүктедегі толқын пішінін көрсетеді.', 'Shows the waveform measured at this point.'],
+    ['Поставьте рядом с металлом, деревом, стеклом, резиной или другим предметом: датчик покажет его колебания.', 'Металл, ағаш, шыны, резеңке немесе басқа заттың жанына қойыңыз: датчик оның тербелісін көрсетеді.', 'Place it near metal, wood, glass, rubber, or another object to measure its vibrations.'],
+    ['Точный тон с автоматической развёрткой частоты.', 'Жиілігі автоматты ауысатын дәл тон.', 'Precise tone with an automatic frequency sweep.'],
+    ['Усиленный источник низких частот 80–220 Гц.', '80–220 Гц төмен жиілікті қуатты дыбыс көзі.', 'Amplified low frequency source at 80–220 Hz.'],
+    ['Сильно отражает волны.', 'Толқындарды қатты шағылыстырады.', 'Strongly reflects waves.'],
+    ['Рассеивает волну неровной поверхностью.', 'Кедір-бұдыр бетімен толқынды шашыратады.', 'Scatters waves with its uneven surface.'],
+    ['Сильно гасит волны в занятой области.', 'Өзі тұрған жерде толқындарды қатты бәсеңдетеді.', 'Strongly damps waves in its area.'],
+    ['Снижает прохождение звука за экран.', 'Экранның ар жағына өтетін дыбысты азайтады.', 'Reduces sound transmission behind the screen.'],
+    ['Звук возбуждает колебания металла. Вибрация бежит вдоль балки и вновь излучает звук.', 'Дыбыс металды тербетеді. Діріл арқалық бойымен таралып, қайта дыбыс шығарады.', 'Sound excites metal vibrations. They travel along the beam and radiate sound again.'],
+    ['Стенки трубы вибрируют, а внутри по воздушному каналу идёт отдельная волна, которая выходит из открытых концов.', 'Құбыр қабырғалары тербеледі, ал ішіндегі ауа арнасымен жеке толқын жүріп, ашық ұштарынан шығады.', 'The pipe walls vibrate while a separate wave travels through its air channel and exits the open ends.'],
+    ['Колеблется при контакте с металлом и другими предметами, но быстро гасит вибрацию.', 'Металл және басқа заттармен жанасқанда тербеледі, бірақ дірілді тез бәсеңдетеді.', 'Vibrates when touching metal or other objects, but quickly damps the vibration.'],
+    ['Резина может колебаться при контакте с металлом, но быстро гасит вибрацию.', 'Резеңке металлға жанасқанда тербеле алады, бірақ дірілді тез бәсеңдетеді.', 'Rubber can vibrate when touching metal, but damps vibration quickly.'],
+    ['Материал колеблется от звука и передаёт вибрацию соприкасающимся предметам.', 'Материал дыбыстан тербеліп, жанасқан заттарға діріл береді.', 'The material vibrates from sound and passes vibration to touching objects.'],
+    ['Параметры сравнительные, модель упрощена.', 'Көрсеткіштер салыстырмалы, модель жеңілдетілген.', 'Values are comparative; the model is simplified.'],
+    ['при силе от 70% стекло постепенно трескается от звука в воздухе или вибрации через соприкасающиеся предметы.', '70%-дан жоғары күште шыны ауадағы дыбыстан немесе жанасқан заттардың дірілінен біртіндеп жарылады.', 'above 70% strength, glass gradually cracks from airborne sound or vibration through touching objects.'],
+    ['расчётных ячейки', 'есептеу ұяшығы', 'simulation cells'],
+    ['Резонанс около', 'Резонанс шамамен', 'Resonance near'],
+    ['отражение', 'шағылысу', 'reflection'], ['поглощение', 'жұтылу', 'absorption'],
+    ['Материал стены:', 'Қабырға материалы:', 'Wall material:'],
+    ['Источник настроен на', 'Дыбыс көзі бапталды:', 'Source tuned to'],
+    ['Размер области:', 'Аймақ өлшемі:', 'Area size:'],
+    ['Достигнут максимальный размер карты', 'Картаның ең үлкен өлшеміне жетті', 'Maximum map size reached'],
+    ['Можно добавить не больше восьми источников', 'Сегізден артық дыбыс көзін қосуға болмайды', 'You can add up to eight sources'],
+    ['В сцене должен остаться хотя бы один источник', 'Сахнада кемінде бір дыбыс көзі қалуы керек', 'At least one source must remain'],
+    ['Добавлен источник', 'Дыбыс көзі қосылды:', 'Added source'],
+    ['Удалить источник', 'Дыбыс көзін өшіру', 'Remove source'],
+    ['Теперь это', 'Енді бұл', 'Now this is'], ['добавлен', 'қосылды', 'added'],
+    ['Стена слишком короткая', 'Қабырға тым қысқа', 'Wall is too short'],
+    ['Стекло разбилось: резонанс', 'Шыны сынды: резонанс', 'Glass broke: resonance'],
+    ['Сцена сброшена', 'Сахна қалпына келтірілді', 'Scene reset'],
+    ['Волновое поле очищено', 'Толқын өрісі тазаланды', 'Wave field cleared'],
+    ['Добавлены слои: бетон — минеральная вата — бетон', 'Қабаттар қосылды: бетон — минералды мақта — бетон', 'Added layers: concrete — mineral wool — concrete'],
+    ['Браузер не поддерживает воспроизведение звука', 'Браузер дыбысты ойнатуды қолдамайды', 'This browser does not support audio playback'],
+    ['Нажмите «Выпустить одну волну»', '«Бір толқынды жіберу» түймесін басыңыз', 'Press “Emit one wave”'],
+    ['Постоянный звук включён', 'Үздіксіз дыбыс қосылды', 'Continuous sound is on'],
+    ['Выпущена одна волна из источника', 'Бір толқын дыбыс көзінен жіберілді:', 'One wave emitted from source'],
+    ['Одновременно выпущены волны из', 'Толқындар бір мезгілде жіберілді:', 'Waves emitted simultaneously from'],
+    ['источников', 'дыбыс көзінен', 'sources'], ['источника', 'дыбыс көзінен', 'sources'],
+    ['источник', 'дыбыс көзі', 'source'], ['Источник', 'Дыбыс көзі', 'Source'],
+    ['ИСТОЧНИКОВ', 'ДЫБЫС КӨЗІ', 'SOURCES'], ['ИСТОЧНИКА', 'ДЫБЫС КӨЗІ', 'SOURCES'], ['ИСТОЧНИК', 'ДЫБЫС КӨЗІ', 'SOURCE'],
+    ['слоёв', 'қабат', 'layers'], ['слоя', 'қабат', 'layers'], ['слой', 'қабат', 'layer'],
+    ['предм.', 'нысан', 'objects'], ['разбито', 'сынған', 'broken'], ['РАЗБИТО', 'СЫНҒАН', 'BROKEN'],
+    ['До ближайшего источника', 'Ең жақын дыбыс көзіне дейін', 'Nearest source is'],
+    ['нет сигнала', 'сигнал жоқ', 'no signal'], ['нет объекта', 'нысан жоқ', 'no object'],
+    ['рассеивание', 'шашырау', 'diffusion'], ['готово', 'дайын', 'ready'],
+    ['относительная амплитуда вибрации.', 'дірілдің салыстырмалы амплитудасы.', 'relative vibration amplitude.'],
+    ['Показана текущая вибрация.', 'Ағымдағы діріл көрсетілген.', 'Current vibration is shown.'],
+    ['Резина быстро гасит полученные колебания.', 'Резеңке қабылдаған тербелістерді тез бәсеңдетеді.', 'Rubber quickly damps incoming vibration.'],
+    ['Открытая труба: основной тон около', 'Ашық құбыр: негізгі тон шамамен', 'Open pipe: fundamental tone near'],
+    ['Труба: стенки и воздух внутри', 'Құбыр: қабырғалары мен ішіндегі ауа', 'Pipe: walls and air inside'],
+    ['Стекло: резонанс', 'Шыны: резонанс', 'Glass: resonance'],
+    ['повреждение', 'зақым', 'damage'], ['Материал:', 'Материал:', 'Material:'],
+    ['нет', 'жоқ', 'none'], ['волна', 'толқын', 'wave'], ['вибр.', 'діріл', 'vibration'],
+    ['Сила сигнала', 'Сигнал күші', 'Signal strength'], ['Частота', 'Жиілік', 'Frequency'],
+    ['Звучат', 'Дыбыс шығарып тұр:', 'Playing'], ['громкость ограничена', 'дыбыс деңгейі шектелген', 'volume limited'],
+    ['Неподвижный источник', 'Қозғалмайтын дыбыс көзі', 'Stationary source'],
+    ['Движение остановлено у края', 'Қозғалыс шетте тоқтады', 'Movement stopped at edge']
+  ];
+
+  const translations = { kk: new Map(), en: new Map() };
+  for (const [ru, kk, en] of entries) { translations.kk.set(ru, kk); translations.en.set(ru, en); }
+  const escaped = [...new Set(entries.map(row => row[0]))].sort((a, b) => b.length - a.length).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\<script src="i18n.js"></script>'));
+  const pattern = new RegExp(escaped.join('|'), 'g');
+  const valid = new Set(['ru', 'kk', 'en']);
+  let language = 'ru';
+  try { const stored = localStorage.getItem('volnalab-language'); if (valid.has(stored)) language = stored; } catch { }
+  const textCache = new WeakMap(), attributeCache = new WeakMap();
+  const attributes = ['aria-label', 'title', 'placeholder', 'alt', 'label'];
+  function t(value) {
+    const original = String(value ?? '');
+    if (language === 'ru') return original;
+    const translated = original.replace(pattern, part => translations[language].get(part) || part);
+    if (language === 'kk') return translated;
+    const units = { 'Гц': 'Hz', 'дБ': 'dB', 'см': 'cm', 'м/с': 'm/s', 'м': 'm' };
+    return translated.replace(/(\d)\s(Гц|дБ|см|м\/с|м)(?=$|[\s.,;:×*])/g, (_, digit, unit) => `${digit} ${units[unit]}`);
+  }
+  function number(value) { return language === 'en' ? String(value).replace(',', '.') : String(value).replace('.', ','); }
+  function ignored(node) { return node.parentElement?.closest('script,style,noscript,[data-no-i18n]'); }
+  function translateNode(node) {
+    if (!node.nodeValue || ignored(node)) return;
+    const old = textCache.get(node);
+    const original = old && node.nodeValue === old.rendered ? old.original : node.nodeValue;
+    const rendered = t(original);
+    textCache.set(node, { original, rendered });
+    if (node.nodeValue !== rendered) node.nodeValue = rendered;
+  }
+  function translateAttributes(element) {
+    if (element.closest('[data-no-i18n]')) return;
+    let cached = attributeCache.get(element);
+    if (!cached) { cached = new Map(); attributeCache.set(element, cached); }
+    for (const attribute of attributes) {
+      if (!element.hasAttribute(attribute)) continue;
+      const value = element.getAttribute(attribute), old = cached.get(attribute);
+      const original = old && value === old.rendered ? old.original : value;
+      const rendered = t(original);
+      cached.set(attribute, { original, rendered });
+      if (value !== rendered) element.setAttribute(attribute, rendered);
+    }
+  }
+  function localizeSubtree(root) {
+    if (root.nodeType === Node.TEXT_NODE) { translateNode(root); return; }
+    if (root.nodeType !== Node.ELEMENT_NODE || root.closest('[data-no-i18n]')) return;
+    translateAttributes(root);
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.nodeType === Node.TEXT_NODE) translateNode(node);
+      else translateAttributes(node);
+    }
+  }
+  const originalTitle = document.title;
+  const description = document.querySelector('meta[name="description"]');
+  const originalDescription = description?.content || '';
+  function setLanguage(next) {
+    if (!valid.has(next)) return;
+    language = next;
+    document.documentElement.lang = next;
+    document.title = t(originalTitle);
+    if (description) description.content = t(originalDescription);
+    document.getElementById('languageSelect').value = next;
+    try { localStorage.setItem('volnalab-language', next); } catch { }
+    localizeSubtree(document.body);
+    document.dispatchEvent(new CustomEvent('volnalab:language', { detail: next }));
+  }
+  const select = document.getElementById('languageSelect');
+  select.addEventListener('change', () => setLanguage(select.value));
+  const observer = new MutationObserver(records => {
+    for (const record of records) {
+      if (record.type === 'characterData') translateNode(record.target);
+      else if (record.type === 'attributes') translateAttributes(record.target);
+      else for (const node of record.addedNodes) localizeSubtree(node);
+    }
+  });
+  observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: attributes });
+  window.volnaI18n = { t, number, get language() { return language; }, setLanguage };
+  setLanguage(language);
+})();
+
+</script>
+  <script>
+(() => {
+  'use strict';
+
   const VIEW_NX = 240, VIEW_NY = 160, PAD_X = 40, PAD_Y = 40;
   const NX = VIEW_NX + PAD_X * 2, NY = VIEW_NY + PAD_Y * 2;
   let ROOM_W = 18, ROOM_H = 12, DX = ROOM_W / (VIEW_NX - 1), DY = ROOM_H / (VIEW_NY - 1);
   const BASE_DX = DX, BASE_DT = 0.000105, STEPS_PER_FRAME = 8, BASE_C = 343, MAX_ROOM_W = 4608, MAX_BASE_ROOM_W = 2304;
   let DT = BASE_DT, BASE_ROOM_W = 18, BASE_ROOM_H = 12;
   const canvas = document.getElementById('field');
+  const { t, number: localNumber } = window.volnaI18n;
   const ctx = canvas.getContext('2d', { alpha: false });
   const wrap = document.getElementById('canvasWrap');
   const fieldCanvas = document.createElement('canvas');
@@ -127,6 +416,9 @@
     freq: document.getElementById('frequency'), freqOut: document.getElementById('frequencyValue'), frequencyPreview: document.getElementById('frequencyPreview'),
     freqMaxLabel: document.getElementById('frequencyMaxLabel'), sweepBtn: document.getElementById('sweepBtn'),
     level: document.getElementById('level'), levelOut: document.getElementById('levelValue'),
+    motionMode: document.getElementById('motionMode'), motionControls: document.getElementById('motionControls'),
+    motionDirection: document.getElementById('motionDirection'), motionDirectionOut: document.getElementById('motionDirectionValue'),
+    motionSpeed: document.getElementById('motionSpeed'), motionSpeedOut: document.getElementById('motionSpeedValue'),
     type: document.getElementById('waveType'), emissionMode: document.getElementById('emissionMode'), pulseBtn: document.getElementById('emitPulse'), allPulsesBtn: document.getElementById('emitAllPulses'), pulseHint: document.getElementById('pulseHint'), material: document.getElementById('material'),
     thickness: document.getElementById('thickness'), thicknessOut: document.getElementById('thicknessValue'),
     materialInfo: document.getElementById('materialInfo'), glassTune: document.getElementById('glassTune'), wavelength: document.getElementById('wavelengthValue'),
@@ -203,7 +495,7 @@
   };
   const equipmentTypes = new Set(['microphone', 'levelMeter', 'analyzer', 'oscilloscope', 'vibration', 'toneGenerator', 'subwoofer', 'reflectorPlate', 'diffuser', 'bassTrap', 'isolationScreen', 'metalBeam', 'hollowPipe']);
   const state = {
-    sources: [{ id: 1, x: .27, y: .52, frequency: 340, level: 65, type: 'sine', emissionMode: 'continuous', color: sourceColors[0], audio: null }],
+    sources: [{ id: 1, x: .27, y: .52, frequency: 340, level: 65, type: 'sine', emissionMode: 'continuous', motionMode: 'still', motionDirection: 0, motionSpeed: 1, color: sourceColors[0], audio: null }],
     selected: 1, nextId: 2, walls: [], objects: [], nextObjectId: 1, selectedObject: null, selectedWall: null, tool: 'source', drag: null, preview: null,
     running: true, audioOn: false, audio: null, width: 0, height: 0, dpr: 1, simTime: 0, zoom: 1, cameraScale: 1, cameraX: 0, cameraY: 0,
     pressure: new Float32Array(NX * NY), next: new Float32Array(NX * NY),
@@ -218,7 +510,17 @@
 
   let toastTimer = 0, lastFrame = performance.now();
   const selected = () => state.sources.find(s => s.id === state.selected) || state.sources[0];
-  const db = value => String(value).replace('.', ',');
+  const db = value => localNumber(value);
+  const directionArrow = angle => ['→', '↘', '↓', '↙', '←', '↖', '↑', '↗'][Math.round((angle || 0) / 45) % 8];
+  const sourceMotionMeta = src => src.motionMode && src.motionMode !== 'still' && src.motionSpeed > 0 ? ` · ${directionArrow(src.motionDirection)} ${db(src.motionSpeed)} м/с` : '';
+  function updateMotionControls(src) {
+    ui.motionMode.value = src.motionMode || 'still';
+    ui.motionControls.hidden = ui.motionMode.value === 'still';
+    ui.motionDirection.value = src.motionDirection || 0;
+    ui.motionSpeed.value = src.motionSpeed ?? 1;
+    ui.motionDirectionOut.textContent = `${src.motionDirection || 0}° ${directionArrow(src.motionDirection)}`;
+    ui.motionSpeedOut.textContent = `${db(src.motionSpeed ?? 1)} м/с`;
+  }
   function say(text) {
     ui.toast.textContent = text; ui.toast.classList.add('show');
     clearTimeout(toastTimer); toastTimer = setTimeout(() => ui.toast.classList.remove('show'), 1900);
@@ -298,15 +600,16 @@
     for (const src of state.sources) {
       const row = document.createElement('div'); row.className = 'source-row'; row.dataset.sourceId = String(src.id); row.setAttribute('aria-pressed', String(src.id === state.selected));
       const name = src.device ? objectSpecs[src.device].name : 'Источник';
-      row.innerHTML = `<button class="source-pick" type="button" aria-pressed="${src.id === state.selected}"><span class="source-dot" style="color:${src.color};background:${src.color}"></span><span class="source-name">${name} ${String(src.id).padStart(2, '0')}</span><span class="source-meta">${src.emissionMode === 'pulse' ? '1 волна · ' : ''}${src.frequency} Гц · ${src.level}%</span></button><button class="source-remove" type="button" aria-label="Удалить источник ${src.id}">×</button>`;
+      row.innerHTML = `<button class="source-pick" type="button" aria-pressed="${src.id === state.selected}"><span class="source-dot" style="color:${src.color};background:${src.color}"></span><span class="source-name">${name} ${String(src.id).padStart(2, '0')}</span><span class="source-meta">${src.emissionMode === 'pulse' ? '1 волна · ' : ''}${src.frequency} Гц · ${src.level}%${sourceMotionMeta(src)}</span></button><button class="source-remove" type="button" aria-label="Удалить источник ${src.id}">×</button>`;
       row.querySelector('.source-pick').addEventListener('click', () => selectSource(src.id));
       row.querySelector('.source-remove').addEventListener('click', e => { e.stopPropagation(); removeSource(src.id); });
       ui.sourceList.append(row);
     }
-    ui.sourceLabel.textContent = `${current.device ? objectSpecs[current.device].name.toLowerCase() : 'источник'} ${String(current.id).padStart(2, '0')}`;
+    ui.sourceLabel.textContent = `${current.device ? objectSpecs[current.device].name : 'Источник'} ${String(current.id).padStart(2, '0')}`;
     ui.freq.max = current.device === 'subwoofer' ? 220 : 1000;
     ui.freqMaxLabel.textContent = ui.freq.max;
     ui.freq.value = current.frequency; ui.level.value = current.level; ui.type.value = current.type; ui.emissionMode.value = current.emissionMode || 'continuous';
+    updateMotionControls(current);
     ui.pulseBtn.hidden = current.emissionMode !== 'pulse'; ui.pulseHint.hidden = current.emissionMode !== 'pulse';
     ui.sweepBtn.hidden = current.device !== 'toneGenerator' || current.type === 'noise' || current.emissionMode === 'pulse';
     ui.sweepBtn.textContent = current.sweep ? 'Остановить на текущей частоте' : 'Запустить перебор частот';
@@ -332,7 +635,7 @@
     drawFrequencyPreview();
     for (const row of ui.sourceList.children) {
       const src = state.sources.find(x => String(x.id) === row.dataset.sourceId);
-      if (src) row.querySelector('.source-meta').textContent = `${src.emissionMode === 'pulse' ? '1 волна · ' : ''}${src.frequency} Гц · ${src.level}%`;
+      if (src) row.querySelector('.source-meta').textContent = `${src.emissionMode === 'pulse' ? '1 волна · ' : ''}${src.frequency} Гц · ${src.level}%${sourceMotionMeta(src)}`;
       row.setAttribute('aria-pressed', String(src?.id === state.selected));
     }
     if (state.audioOn) syncAudio();
@@ -472,10 +775,13 @@
     ROOM_W = width; ROOM_H = height; DX = ROOM_W / (VIEW_NX - 1); DY = ROOM_H / (VIEW_NY - 1); DT = BASE_DT * DX / BASE_DX;
     state.cameraX = 0; state.cameraY = 0;
     state.audibleDirty = true;
+    updateMapLabel();
+    clearField(); rebuildMedium(); updateReadouts();
+  }
+  function updateMapLabel() {
     const label = `${db(Number(ROOM_W.toFixed(1)))} × ${db(Number(ROOM_H.toFixed(1)))} м`;
     ui.mapLabel.textContent = label;
     document.querySelector('.scale').textContent = `открытая область · ${label}`;
-    clearField(); rebuildMedium(); updateReadouts();
   }
   function setMapSize(width, height, recenter = true) {
     BASE_ROOM_W = width; BASE_ROOM_H = height; state.cameraScale = 1;
@@ -491,7 +797,7 @@
   function addSource(x, y) {
     if (state.sources.length >= 8) { say('Можно добавить не больше восьми источников'); return; }
     const old = selected(), id = state.nextId++;
-    const src = { id, x: clamp(x / ROOM_W, 0, 1), y: clamp(y / ROOM_H, 0, 1), frequency: old.frequency, level: old.level, type: old.type, emissionMode: old.emissionMode || 'continuous', pulseStartTime: null, color: sourceColors[(id - 1) % sourceColors.length], audio: null };
+    const src = { id, x: clamp(x / ROOM_W, 0, 1), y: clamp(y / ROOM_H, 0, 1), frequency: old.frequency, level: old.level, type: old.type, emissionMode: old.emissionMode || 'continuous', motionMode: old.motionMode || 'still', motionDirection: old.motionDirection || 0, motionSpeed: old.motionSpeed ?? 1, pulseStartTime: null, color: sourceColors[(id - 1) % sourceColors.length], audio: null };
     state.sources.push(src);
     state.audibleDirty = true;
     state.selected = id; renderSources(); say(`Добавлен источник ${String(id).padStart(2, '0')}`);
@@ -562,7 +868,7 @@
       if (vibrationProps[o.material]) prepareVibration(o);
       rebuildMedium(); updateReadouts(); updateEquipmentPanel();
     }
-    say(`Теперь это ${spec.name.toLowerCase()}`);
+    say(`Теперь это ${spec.name}`);
   }
   function addWall(x1, y1, x2, y2, material, thicknessCm) {
     const wall = { ax: clamp(x1, 0, ROOM_W), ay: clamp(y1, 0, ROOM_H), bx: clamp(x2, 0, ROOM_W), by: clamp(y2, 0, ROOM_H), thickness: thicknessCm / 100, material };
@@ -1235,7 +1541,7 @@
           }
           if (wall.material === 'glass' && length > 65) {
             ctx.fillStyle = '#c9f7ff'; ctx.font = '600 10px system-ui'; ctx.textAlign = 'center';
-            ctx.fillText(`${wall.resonance} Гц`, (start.x + end.x) / 2, (start.y + end.y) / 2 - width / 2 - 8);
+            ctx.fillText(t(`${wall.resonance} Гц`), (start.x + end.x) / 2, (start.y + end.y) / 2 - width / 2 - 8);
           }
         }
         if (wall === state.selectedWall) {
@@ -1252,7 +1558,7 @@
           const sx = horizontal ? x + span * k : x + ww * .5, sy = horizontal ? y + hh * .5 : y + span * k;
           ctx.beginPath(); ctx.moveTo(sx - 4, sy - 4); ctx.lineTo(sx + 3, sy + 2); ctx.moveTo(sx + 3, sy - 3); ctx.lineTo(sx - 2, sy + 4); ctx.stroke();
         }
-        if (span > 65) { ctx.fillStyle = '#c9f7ff'; ctx.font = '600 10px system-ui'; ctx.textAlign = 'center'; ctx.fillText('РАЗБИТО', x + ww / 2, y + hh / 2 - 8); }
+        if (span > 65) { ctx.fillStyle = '#c9f7ff'; ctx.font = '600 10px system-ui'; ctx.textAlign = 'center'; ctx.fillText(t('РАЗБИТО'), x + ww / 2, y + hh / 2 - 8); }
         if (wall === state.selectedWall) { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.strokeRect(x - 4, y - 4, ww + 8, hh + 8); }
         ctx.restore(); continue;
       }
@@ -1269,7 +1575,7 @@
       }
       if (wall.material === 'glass' && Math.max(ww, hh) > 65) {
         ctx.save(); ctx.fillStyle = '#c9f7ff'; ctx.font = '600 10px system-ui'; ctx.textAlign = 'center';
-        ctx.fillText(`${wall.resonance} Гц`, x + ww / 2, y + hh / 2 - 7);
+        ctx.fillText(t(`${wall.resonance} Гц`), x + ww / 2, y + hh / 2 - 7);
         ctx.restore();
       }
       if (wall === state.selectedWall) { ctx.save(); ctx.strokeStyle = '#f5fff0'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.strokeRect(x - 4, y - 4, ww + 8, hh + 8); ctx.restore(); }
@@ -1284,7 +1590,7 @@
     return '';
   }
   function drawSensorLabel(o, x, y, color) {
-    const label = sensorLabel(o); if (!label) return;
+    const label = t(sensorLabel(o)); if (!label) return;
     ctx.save(); ctx.font = '700 11px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const width = Math.max(48, ctx.measureText(label).width + 16), left = clamp(x - width / 2, 3, Math.max(3, state.width - width - 3)), top = clamp(y - 39, 3, Math.max(3, state.height - 23));
     ctx.fillStyle = '#09181eea'; ctx.strokeStyle = color + 'c9'; ctx.lineWidth = 1;
@@ -1300,7 +1606,7 @@
         ctx.save(); ctx.fillStyle = '#0c1e24'; ctx.strokeStyle = spec.color; ctx.lineWidth = selectedObject ? 2.5 : 1.5;
         ctx.shadowColor = spec.color; ctx.shadowBlur = selectedObject ? 13 : 5;
         ctx.beginPath(); ctx.arc(cx, cy, 11, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.shadowBlur = 0;
-        ctx.fillStyle = spec.color; ctx.font = '700 8px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(spec.symbol.slice(0, 3), cx, cy);
+        ctx.fillStyle = spec.color; ctx.font = '700 8px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t(spec.symbol).slice(0, 3), cx, cy);
         ctx.restore(); drawSensorLabel(o, cx, cy, spec.color); continue;
       }
       ctx.save(); ctx.fillStyle = m.color + '6b'; ctx.strokeStyle = m.color; ctx.lineWidth = 1.4;
@@ -1316,7 +1622,7 @@
       }
       if (o.type === 'table') { ctx.strokeStyle = '#071115aa'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + w * .18, y + h * .72); ctx.lineTo(x + w * .82, y + h * .72); ctx.moveTo(x + w * .24, y + h * .72); ctx.lineTo(x + w * .2, y + h * .98); ctx.moveTo(x + w * .76, y + h * .72); ctx.lineTo(x + w * .8, y + h * .98); ctx.stroke(); }
       if (o.vibration) drawStructuralWaves(o, x, y, w, h);
-      if (w > 48 && h > 25 && !['metalBeam', 'hollowPipe'].includes(o.type)) { ctx.fillStyle = '#091419'; ctx.font = '600 9px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(o.symbol, x + w / 2, y + h / 2, w - 8); }
+      if (w > 48 && h > 25 && !['metalBeam', 'hollowPipe'].includes(o.type)) { ctx.fillStyle = '#091419'; ctx.font = '600 9px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t(o.symbol), x + w / 2, y + h / 2, w - 8); }
       if (o.id === state.selectedObject) { ctx.strokeStyle = '#f2fff0'; ctx.setLineDash([3, 3]); ctx.strokeRect(x - 3, y - 3, w + 6, h + 6); ctx.setLineDash([]); }
       ctx.restore();
     }
@@ -1333,7 +1639,12 @@
       ctx.fillStyle = s.color; ctx.shadowColor = s.color; ctx.shadowBlur = 17; ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
       ctx.shadowBlur = 0; ctx.strokeStyle = s.id === state.selected ? '#ffffff' : s.color; ctx.lineWidth = s.id === state.selected ? 2 : 1; ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2); ctx.stroke();
       ctx.fillStyle = '#071115'; ctx.font = '700 8px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(s.id).padStart(2, '0'), x, y);
-      if (s.device) { ctx.fillStyle = s.color; ctx.font = '700 9px system-ui'; ctx.fillText(objectSpecs[s.device].symbol, x, y - 25); }
+      if (s.motionMode && s.motionMode !== 'still' && s.motionSpeed > 0) {
+        const angle = (s.motionDirection || 0) * Math.PI / 180, tx = x + Math.cos(angle) * 29, ty = y + Math.sin(angle) * 29;
+        ctx.strokeStyle = s.color; ctx.fillStyle = s.color; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + Math.cos(angle) * 14, y + Math.sin(angle) * 14); ctx.lineTo(tx, ty); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - Math.cos(angle - .55) * 7, ty - Math.sin(angle - .55) * 7); ctx.lineTo(tx - Math.cos(angle + .55) * 7, ty - Math.sin(angle + .55) * 7); ctx.closePath(); ctx.fill();
+      }
+      if (s.device) { ctx.fillStyle = s.color; ctx.font = '700 9px system-ui'; ctx.fillText(t(objectSpecs[s.device].symbol), x, y - 25); }
       ctx.restore();
     }
   }
@@ -1344,11 +1655,35 @@
       src.frequency = 80 + Math.round((src.sweepElapsed % 8) / 8 * 920);
     }
   }
-  let lastEquipmentUpdate = 0;
+  function advanceSources(dt) {
+    let moved = false, directionChanged = false;
+    for (const src of state.sources) {
+      if (!src.motionMode || src.motionMode === 'still' || !src.motionSpeed) continue;
+      const angle = (src.motionDirection || 0) * Math.PI / 180;
+      const previousX = src.x * ROOM_W, previousY = src.y * ROOM_H;
+      let x = previousX + Math.cos(angle) * src.motionSpeed * dt;
+      let y = previousY + Math.sin(angle) * src.motionSpeed * dt;
+      const edgeX = x < 0 || x > ROOM_W, edgeY = y < 0 || y > ROOM_H;
+      if (src.motionMode === 'bounce') {
+        if (edgeX) { x = x < 0 ? -x : 2 * ROOM_W - x; src.motionDirection = (180 - src.motionDirection + 360) % 360; }
+        if (edgeY) { y = y < 0 ? -y : 2 * ROOM_H - y; src.motionDirection = (360 - src.motionDirection) % 360; }
+        directionChanged ||= edgeX || edgeY;
+      } else if (edgeX || edgeY) {
+        src.motionMode = 'still';
+        directionChanged = true;
+      }
+      src.x = clamp(x / ROOM_W, 0, 1); src.y = clamp(y / ROOM_H, 0, 1);
+      moved ||= src.x !== previousX / ROOM_W || src.y !== previousY / ROOM_H;
+    }
+    if (moved) state.audibleDirty = true;
+    if (directionChanged) { updateMotionControls(selected()); updateReadouts(); }
+  }
+  let lastEquipmentUpdate = 0, lastAudioUpdate = 0;
   function draw(now) {
     const dt = Math.min(.06, (now - lastFrame) / 1000); lastFrame = now;
-    if (state.running) { updateSweeps(dt); stepField(); updateGlassDamage(dt); }
+    if (state.running) { advanceSources(dt); updateSweeps(dt); stepField(); updateGlassDamage(dt); }
     if (now - lastEquipmentUpdate > 100) { refreshModeledSensors(); refreshAnalyzers(); if (state.sources.some(src => src.sweep)) { ui.freq.value = selected().frequency; updateReadouts(); } updateEquipmentPanel(); lastEquipmentUpdate = now; }
+    if (state.audioOn && now - lastAudioUpdate > 100) { syncAudio(); lastAudioUpdate = now; }
     pressureImage();
     ctx.fillStyle = '#081418'; ctx.fillRect(0, 0, state.width, state.height);
     ctx.imageSmoothingEnabled = true; ctx.filter = 'blur(.45px)';
@@ -1387,7 +1722,7 @@
     for (const src of state.sources) stopSourceAudio(src);
     state.walls = []; state.objects = []; state.nextObjectId = 1; state.selectedObject = null; state.selectedWall = null; document.getElementById('objectType').value = 'table'; ui.equipmentType.value = 'microphone'; state.zoom = 1; state.cameraScale = 1; state.cameraX = 0; state.cameraY = 0;
     ui.mapSize.value = '18x12'; setMapSize(18, 12);
-    state.sources = [{ id: 1, x: .27, y: .52, frequency: 340, level: 65, type: 'sine', emissionMode: 'continuous', color: sourceColors[0], audio: null }];
+    state.sources = [{ id: 1, x: .27, y: .52, frequency: 340, level: 65, type: 'sine', emissionMode: 'continuous', motionMode: 'still', motionDirection: 0, motionSpeed: 1, color: sourceColors[0], audio: null }];
     state.selected = 1; state.nextId = 2; setTool('source'); clearField(); rebuildMedium(); renderSources(); updateEquipmentPanel(); say('Сцена сброшена');
   });
   document.getElementById('viewBtn').addEventListener('click', () => { clearField(); say('Волновое поле очищено'); });
@@ -1487,12 +1822,25 @@
   ui.mapEmitAllPulses.addEventListener('click', emitAllPulses);
   ui.freq.addEventListener('input', () => { selected().frequency = +ui.freq.value; selected().sweep = false; clearField(); updateReadouts(); });
   ui.level.addEventListener('input', () => { selected().level = +ui.level.value; state.audibleDirty = true; refreshModeledSensors(); updateReadouts(); });
+  ui.motionMode.addEventListener('change', () => { selected().motionMode = ui.motionMode.value; updateMotionControls(selected()); updateReadouts(); });
+  ui.motionDirection.addEventListener('input', () => { selected().motionDirection = +ui.motionDirection.value; updateMotionControls(selected()); updateReadouts(); });
+  ui.motionSpeed.addEventListener('input', () => { selected().motionSpeed = +ui.motionSpeed.value; updateMotionControls(selected()); updateReadouts(); });
   ui.type.addEventListener('change', () => { selected().type = ui.type.value; if (ui.type.value === 'noise') selected().sweep = false; ui.sweepBtn.hidden = selected().device !== 'toneGenerator' || ui.type.value === 'noise' || selected().emissionMode === 'pulse'; clearField(); updateReadouts(); });
   ui.sweepBtn.addEventListener('click', () => {
     const src = selected(); if (src.device !== 'toneGenerator') return;
     src.sweep = !src.sweep; src.sweepElapsed = 0;
     if (src.sweep) { src.frequency = 80; ui.freq.value = 80; clearField(); }
     updateReadouts();
+  });
+  document.addEventListener('volnalab:language', () => {
+    updateMapLabel();
+    renderSources();
+    updateMotionControls(selected());
+    updateEquipmentPanel();
+    ui.pauseText.textContent = state.running ? 'Пауза' : 'Продолжить';
+    ui.simState.textContent = state.running ? 'Волновое поле обновляется' : 'Симуляция приостановлена';
+    ui.soundBtnText.textContent = state.audioOn ? 'Выключить звук' : 'Включить звук';
+    if (!state.audioOn) ui.soundState.textContent = 'Аудио выключено · включите для прослушивания источников';
   });
 
   function addWallAt(x, y, width, height, material) {
@@ -1515,6 +1863,15 @@
     if (!input || !Number.isFinite(input.x) || !Number.isFinite(input.y) || input.x < 0 || input.x > ROOM_W || input.y < 0 || input.y > ROOM_H) throw new Error(`Точка должна быть внутри области ${ROOM_W} × ${ROOM_H} м`);
     selected().x = input.x / ROOM_W; selected().y = input.y / ROOM_H; state.audibleDirty = true; refreshModeledSensors(); updateReadouts(); return { source: selected().id, x: input.x, y: input.y };
   }
+  function setSourceMotion(input) {
+    if (!input || typeof input !== 'object') throw new Error('Передайте параметры движения');
+    const src = selected();
+    if (input.mode !== undefined) { if (!['still', 'linear', 'bounce'].includes(input.mode)) throw new Error('Неизвестный режим движения'); src.motionMode = input.mode; }
+    if (input.direction !== undefined) { if (!Number.isFinite(input.direction) || input.direction < 0 || input.direction >= 360) throw new Error('Направление должно быть от 0 до 359 градусов'); src.motionDirection = Math.round(input.direction); }
+    if (input.speed !== undefined) { if (!Number.isFinite(input.speed) || input.speed < 0 || input.speed > 20) throw new Error('Скорость должна быть от 0 до 20 м/с'); src.motionSpeed = Math.round(input.speed * 10) / 10; }
+    updateMotionControls(src); updateReadouts();
+    return { source: src.id, mode: src.motionMode, direction: src.motionDirection, speed: src.motionSpeed };
+  }
   function registerWebTools() {
     const mc = document.modelContext; if (!mc?.registerTool) return;
     const lifecycle = new AbortController();
@@ -1522,7 +1879,8 @@
       { name: 'set_acoustic_signal', title: 'Настроить выбранный источник', description: 'Изменяет частоту, уровень и форму сигнала выбранного источника.', inputSchema: { type: 'object', properties: { frequency: { type: 'number', minimum: 80, maximum: 1000 }, level: { type: 'number', minimum: 0, maximum: 100 }, type: { type: 'string', enum: ['sine', 'square', 'sawtooth', 'noise'] } }, additionalProperties: false }, annotations: { readOnlyHint: false, untrustedContentHint: false }, execute: setSource },
       { name: 'add_acoustic_source', title: 'Добавить источник', description: 'Добавляет источник в текущую область в точке x, y в метрах. Копирует параметры выбранного источника.', inputSchema: { type: 'object', properties: { x: { type: 'number', minimum: 0, maximum: 4608 }, y: { type: 'number', minimum: 0, maximum: 3072 } }, required: ['x', 'y'], additionalProperties: false }, annotations: { readOnlyHint: false, untrustedContentHint: false }, execute: input => { if (state.sources.length >= 8) throw new Error('Достигнут лимит восьми источников'); if (!Number.isFinite(input.x) || !Number.isFinite(input.y) || input.x < 0 || input.x > ROOM_W || input.y < 0 || input.y > ROOM_H) throw new Error(`Точка должна быть внутри области ${ROOM_W} × ${ROOM_H} м`); const old = selected(); const id = state.nextId++; state.sources.push({ ...old, id, x: input.x / ROOM_W, y: input.y / ROOM_H, pulseStartTime: null, color: sourceColors[(id - 1) % sourceColors.length], audio: null }); state.audibleDirty = true; state.selected = id; renderSources(); return { source: id, x: input.x, y: input.y }; } },
       { name: 'add_acoustic_layer', title: 'Добавить звукоизоляционный слой', description: 'Добавляет стену из выбранного материала с заданными координатами и толщиной.', inputSchema: { type: 'object', properties: { x: { type: 'number', minimum: 0, maximum: 4608 }, y: { type: 'number', minimum: 0, maximum: 3072 }, width: { type: 'number', exclusiveMinimum: 0, maximum: 4608 }, height: { type: 'number', exclusiveMinimum: 0, maximum: 3072 }, material: { type: 'string', enum: materialKeys } }, required: ['x', 'y', 'width', 'height', 'material'], additionalProperties: false }, annotations: { readOnlyHint: false, untrustedContentHint: false }, execute: input => addWallAt(input.x, input.y, input.width, input.height, input.material) },
-      { name: 'move_acoustic_source', title: 'Переместить выбранный источник', description: 'Перемещает выбранный источник внутри текущей области карты.', inputSchema: { type: 'object', properties: { x: { type: 'number', minimum: 0, maximum: 4608 }, y: { type: 'number', minimum: 0, maximum: 3072 } }, required: ['x', 'y'], additionalProperties: false }, annotations: { readOnlyHint: false, untrustedContentHint: false }, execute: moveSource }
+      { name: 'move_acoustic_source', title: 'Переместить выбранный источник', description: 'Перемещает выбранный источник внутри текущей области карты.', inputSchema: { type: 'object', properties: { x: { type: 'number', minimum: 0, maximum: 4608 }, y: { type: 'number', minimum: 0, maximum: 3072 } }, required: ['x', 'y'], additionalProperties: false }, annotations: { readOnlyHint: false, untrustedContentHint: false }, execute: moveSource },
+      { name: 'set_acoustic_motion', title: 'Настроить движение источника', description: 'Задаёт режим движения, направление в градусах и скорость выбранного источника в м/с.', inputSchema: { type: 'object', properties: { mode: { type: 'string', enum: ['still', 'linear', 'bounce'] }, direction: { type: 'number', minimum: 0, maximum: 359 }, speed: { type: 'number', minimum: 0, maximum: 20 } }, additionalProperties: false }, annotations: { readOnlyHint: false, untrustedContentHint: false }, execute: setSourceMotion }
     ];
     for (const tool of tools) { try { Promise.resolve(mc.registerTool(tool, { signal: lifecycle.signal })).catch(() => {}); } catch {} }
   }
