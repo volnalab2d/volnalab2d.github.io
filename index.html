@@ -317,7 +317,7 @@
 
   const translations = { kk: new Map(), en: new Map() };
   for (const [ru, kk, en] of entries) { translations.kk.set(ru, kk); translations.en.set(ru, en); }
-  const escaped = [...new Set(entries.map(row => row[0]))].sort((a, b) => b.length - a.length).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\<script src="i18n.js"></script>'));
+  const escaped = [...new Set(entries.map(row => row[0]))].sort((a, b) => b.length - a.length).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   const pattern = new RegExp(escaped.join('|'), 'g');
   const valid = new Set(['ru', 'kk', 'en']);
   let language = 'ru';
